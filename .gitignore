@@ -1,0 +1,13 @@
+# Configuracion privada
+config/.env
+.env
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Archivos del editor
+.vscode/
+
+# Archivos generados por el sistema
+storage/*
