@@ -1,8 +1,10 @@
+-- Almacena los roles del sistema
 CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
+-- Registra los usuarios y sus roles
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     rol_id INT NOT NULL,
@@ -15,11 +17,13 @@ CREATE TABLE usuarios (
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 ) ENGINE=InnoDB;
 
+-- Define los permisos del sistema
 CREATE TABLE permisos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     clave VARCHAR(100) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
+-- Asigna permisos a cada rol
 CREATE TABLE rol_permiso (
     rol_id INT NOT NULL,
     permiso_id INT NOT NULL,
@@ -30,6 +34,7 @@ CREATE TABLE rol_permiso (
     FOREIGN KEY (permiso_id) REFERENCES permisos(id)
 ) ENGINE=InnoDB;
 
+-- Clasifica los equipos del laboratorio
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE,
@@ -37,6 +42,7 @@ CREATE TABLE categorias (
     activo TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB;
 
+-- Registra los equipos del laboratorio
 CREATE TABLE equipos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     categoria_id INT NOT NULL,
@@ -49,6 +55,7 @@ CREATE TABLE equipos (
     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 ) ENGINE=InnoDB;
 
+-- Almacena los profesores que reciben prestamos
 CREATE TABLE profesores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -56,6 +63,7 @@ CREATE TABLE profesores (
     activo TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB;
 
+-- Gestiona los tokens de la opcion Recordarme
 CREATE TABLE auth_tokens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
@@ -66,6 +74,7 @@ CREATE TABLE auth_tokens (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
+-- Registra las acciones realizadas en el sistema
 CREATE TABLE bitacora (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
@@ -80,6 +89,7 @@ CREATE TABLE bitacora (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
+-- Guarda las solicitudes y fechas de los prestamos
 CREATE TABLE prestamos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     profesor_id INT NOT NULL,
@@ -101,6 +111,7 @@ CREATE TABLE prestamos (
         CHECK (fecha_fin > fecha_inicio)
 ) ENGINE=InnoDB;
 
+-- Relaciona los equipos con cada prestamo
 CREATE TABLE prestamo_detalle (
     prestamo_id INT NOT NULL,
     equipo_id INT NOT NULL,
