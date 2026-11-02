@@ -55,29 +55,75 @@ if (
     exit;
 }
 
+
 try {
-    // Actualizar la categoria activa
+    // Iniciar la transaccion
+    $pdo->beginTransaction();
+
+    // Consultar los datos anteriores
+    $sqlAnterior = "SELECT nombre, descripcion
+                    FROM categorias
+                    WHERE id = :id AND activo = 1
+                    FOR UPDATE";
+
+    $consultaAnterior = $pdo->prepare($sqlAnterior);
+    $consultaAnterior->execute(['id' => $id]);
+    $anterior = $consultaAnterior->fetch(PDO::FETCH_ASSOC);
+
+    if (!$anterior) {
+        $pdo->rollBack();
+        header('Location: ../pages/categorias.php?error=1');
+        exit;
+    }
+
+    // Actualizar la categoria
     $sql = "UPDATE categorias
-            SET nombre = :nombre,
-                descripcion = :descripcion
+            SET nombre = :nombre, descripcion = :descripcion
             WHERE id = :id AND activo = 1";
 
     $consulta = $pdo->prepare($sql);
-
     $consulta->execute([
         'nombre' => $nombre,
         'descripcion' => $descripcion,
         'id' => $id
     ]);
 
-    // Regresar al listado
+    // Registrar la edicion en bitacora
+    $sqlBitacora = "INSERT INTO bitacora
+                    (usuario_id, accion, entidad, entidad_id,
+                     valores_antes, valores_despues, ip)
+                    VALUES
+                    (:usuario_id, :accion, :entidad, :entidad_id,
+                     :valores_antes, :valores_despues, :ip)";
+
+    $registro = $pdo->prepare($sqlBitacora);
+    $registro->execute([
+        'usuario_id' => $_SESSION['usuario_id'],
+        'accion' => 'EDITAR',
+        'entidad' => 'categorias',
+        'entidad_id' => $id,
+        'valores_antes' => json_encode($anterior, JSON_THROW_ON_ERROR),
+        'valores_despues' => json_encode([
+            'nombre' => $nombre,
+            'descripcion' => $descripcion
+        ], JSON_THROW_ON_ERROR),
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? null
+    ]);
+
+    // Confirmar los cambios
+    $pdo->commit();
+
     header('Location: ../pages/categorias.php?actualizado=1');
     exit;
 
-} catch (PDOException $e) {
-    // Registrar el error
-    error_log($e->getMessage());
+} catch (Throwable $e) {
+    // Deshacer los cambios si ocurre un error
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
 
+    error_log($e->getMessage());
     header('Location: ../pages/categorias.php?error=1');
     exit;
 }
+
