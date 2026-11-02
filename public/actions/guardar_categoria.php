@@ -42,26 +42,61 @@ if ($nombre === '' || mb_strlen($nombre) > 100 ||
     exit;
 }
 
+
 try {
+    // Iniciar la transaccion
+    $pdo->beginTransaction();
+
     // Guardar la categoria
     $sql = "INSERT INTO categorias (nombre, descripcion)
             VALUES (:nombre, :descripcion)";
 
     $consulta = $pdo->prepare($sql);
-
     $consulta->execute([
         'nombre' => $nombre,
         'descripcion' => $descripcion
     ]);
 
-    // Regresar al listado
+    // Obtener el ID de la categoria creada
+    $categoriaId = (int) $pdo->lastInsertId();
+
+    // Registrar la creacion en la bitacora
+    $sqlBitacora = "INSERT INTO bitacora
+                   (usuario_id, accion, entidad, entidad_id,
+                    valores_despues, ip)
+                   VALUES
+                   (:usuario_id, :accion, :entidad, :entidad_id,
+                    :valores_despues, :ip)";
+
+    $registro = $pdo->prepare($sqlBitacora);
+
+    $registro->execute([
+        'usuario_id' => $_SESSION['usuario_id'],
+        'accion' => 'CREAR',
+        'entidad' => 'categorias',
+        'entidad_id' => $categoriaId,
+        'valores_despues' => json_encode([
+            'nombre' => $nombre,
+            'descripcion' => $descripcion
+        ], JSON_THROW_ON_ERROR),
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? null
+    ]);
+
+    // Confirmar los cambios
+    $pdo->commit();
+
     header('Location: ../pages/categorias.php?guardado=1');
     exit;
 
-} catch (PDOException $e) {
-    // Registrar el error
+} catch (Throwable $e) {
+    // Deshacer los cambios si ocurre un error
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+
     error_log($e->getMessage());
 
     header('Location: ../pages/categorias.php?error=1');
     exit;
 }
+
