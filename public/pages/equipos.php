@@ -7,16 +7,31 @@ require_once __DIR__ . '/../../includes/auth.php';
 // Verificar el permiso
 verificarPermiso('ver_equipos');
 
+
+// Obtener el texto de busqueda
+$buscar = $_GET['buscar'] ?? '';
+
+if (!is_string($buscar)) {
+    $buscar = '';
+}
+
+$buscar = mb_substr(trim($buscar), 0, 100);
+
 // Consultar los equipos activos
 $sql = "SELECT e.id, e.codigo, e.nombre,
                e.estado, c.nombre AS categoria
         FROM equipos e
         INNER JOIN categorias c ON e.categoria_id = c.id
         WHERE e.activo = 1
-        ORDER BY e.nombre ASC";
+        AND (e.nombre LIKE :nombre OR e.codigo LIKE :codigo)
+        ORDER BY e.nombre ASC, e.id ASC";
 
 $consulta = $pdo->prepare($sql);
-$consulta->execute();
+
+$consulta->execute([
+    'nombre' => '%' . $buscar . '%',
+    'codigo' => '%' . $buscar . '%'
+]);
 
 $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -33,6 +48,23 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         <h1>Gestion de equipos</h1>
 
         <h2>Lista de equipos</h2>
+
+        <!-- Buscar equipos -->
+        <form method="GET" action="equipos.php">
+
+            <label for="buscar">Buscar equipo:</label>
+
+            <input type="text" id="buscar" name="buscar"
+                maxlength="100"
+                value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+
+            <button type="submit">Buscar</button>
+
+            <a href="equipos.php">Limpiar</a>
+
+        </form>
+
+        <br>
 
         <!-- Mostrar los equipos -->
         <table border="1" cellpadding="8">
