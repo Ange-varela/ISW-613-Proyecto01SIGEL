@@ -9,5 +9,8 @@ config/.env
 # Archivos del editor
 .vscode/
 
-# Archivos generados por el sistema
-storage/*
+# Ignorar los archivos subidos
+storage/equipos/*
+
+# Conservar la estructura de carpetas
+!storage/equipos/.gitkeep

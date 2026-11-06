@@ -122,3 +122,13 @@ CREATE TABLE prestamo_detalle (
     FOREIGN KEY (prestamo_id) REFERENCES prestamos(id),
     FOREIGN KEY (equipo_id) REFERENCES equipos(id)
 ) ENGINE=InnoDB;
+
+-- Almacena las imagenes de los equipos
+CREATE TABLE equipo_imagenes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    equipo_id INT NOT NULL,
+    nombre_archivo VARCHAR(255) NOT NULL,
+    tipo_mime VARCHAR(50) NOT NULL,
+    creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (equipo_id) REFERENCES equipos(id)
+) ENGINE=InnoDB;
