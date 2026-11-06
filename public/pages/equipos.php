@@ -85,6 +85,8 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 Equipo eliminado correctamente.
             </p>
         <?php endif; ?>
+
+        
         
         <h2>Registrar equipo</h2>
 
@@ -181,6 +183,12 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                 <?php if (tienePermiso('editar_equipo')): ?>
                                     <a href="editar_equipo.php?id=<?php echo (int)$equipo['id']; ?>">
                                         Editar
+                                    </a>
+                                <?php endif; ?>
+
+                                <?php if (tienePermiso('editar_equipo')): ?>
+                                    <a href="imagenes_equipo.php?id=<?php echo (int)$equipo['id']; ?>">
+                                        Imagenes
                                     </a>
                                 <?php endif; ?>
 
