@@ -52,6 +52,12 @@ $nombre = htmlspecialchars(
             <p><a href="reportes.php">Consultar reportes</a></p>
         <?php endif; ?>
 
+        <?php if (tienePermiso('ver_usuarios')): ?>
+            <p>
+                <a href="profesores.php">Gestion de profesores</a>
+            </p>
+        <?php endif; ?>
+
         <!-- Cerrar sesion -->
         <form action="../actions/logout.php" method="POST">
             <button type="submit">Cerrar sesion</button>
