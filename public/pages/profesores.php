@@ -13,6 +13,11 @@ if (!tienePermiso('ver_usuarios')) {
     exit('Acceso denegado');
 }
 
+// Crear el token de seguridad
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Obtener el texto de busqueda
 $buscar = $_GET['buscar'] ?? '';
 
@@ -49,6 +54,41 @@ $profesores = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <body>
 
         <h1>Gestion de profesores</h1>
+        
+        <!-- Mostrar mensajes del sistema -->
+        <?php if (($_GET['guardado'] ?? '') === '1'): ?>
+            <p style="color: green;">Profesor registrado correctamente.</p>
+        <?php endif; ?>
+
+        <?php if (($_GET['error'] ?? '') === '1'): ?>
+            <p style="color: red;">No se pudo registrar el profesor.</p>
+        <?php endif; ?>
+
+        <h2>Registrar profesor</h2>
+
+        <!-- Formulario para registrar profesores -->
+        <form action="../actions/guardar_profesor.php" method="POST">
+
+            <input type="hidden" name="csrf_token"
+                value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre"
+                maxlength="100" required>
+
+            <br><br>
+
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" name="correo"
+                maxlength="150" required>
+
+            <br><br>
+
+            <button type="submit">Guardar profesor</button>
+        </form>
+
+        <hr>
+
 
         <h2>Lista de profesores</h2>
 
