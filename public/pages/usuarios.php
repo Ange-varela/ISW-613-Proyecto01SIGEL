@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -182,10 +181,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
             </form>
         <?php endif; ?>
-
         <hr>
-
-
         <h2>Lista de usuarios</h2>
 
         <!-- Buscar usuarios -->
@@ -315,10 +311,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 Siguiente
             </a>
         <?php endif; ?>
-
         <hr>
-
         <p><a href="dashboard.php">Volver al menu principal</a></p>
-
     </body>
 </html>

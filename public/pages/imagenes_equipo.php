@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -128,8 +127,6 @@ $imagenes = $consultaImagenes->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-
         <p><a href="equipos.php">Volver a equipos</a></p>
-
     </body>
 </html>

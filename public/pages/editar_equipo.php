@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -49,70 +48,66 @@ if (empty($_SESSION['csrf_token'])) {
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar equipo - SIGEL</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Editar equipo - SIGEL</title>
+    </head>
+    <body>
 
-    <h1>Editar equipo</h1>
+        <h1>Editar equipo</h1>
 
-    <!-- Formulario de edicion -->
-    <form action="../actions/actualizar_equipo.php" method="POST">
+        <!-- Formulario de edicion -->
+        <form action="../actions/actualizar_equipo.php" method="POST">
 
-        <input type="hidden" name="csrf_token"
-               value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+            <input type="hidden" name="csrf_token"
+                value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
-        <input type="hidden" name="id"
-               value="<?php echo (int)$equipo['id']; ?>">
+            <input type="hidden" name="id"
+                value="<?php echo (int)$equipo['id']; ?>">
 
-        <label for="codigo">Codigo:</label>
-        <input type="text" id="codigo" name="codigo"
-               maxlength="50" required
-               value="<?php echo htmlspecialchars($equipo['codigo'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+            <label for="codigo">Codigo:</label>
+            <input type="text" id="codigo" name="codigo"
+                maxlength="50" required
+                value="<?php echo htmlspecialchars($equipo['codigo'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
-        <br><br>
+            <br><br>
 
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre"
-               maxlength="100" required
-               value="<?php echo htmlspecialchars($equipo['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre"
+                maxlength="100" required
+                value="<?php echo htmlspecialchars($equipo['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
-        <br><br>
+            <br><br>
 
-        <label for="descripcion">Descripcion:</label>
-        <textarea id="descripcion" name="descripcion"
-                  maxlength="5000"><?php echo htmlspecialchars($equipo['descripcion'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></textarea>
+            <label for="descripcion">Descripcion:</label>
+            <textarea id="descripcion" name="descripcion"
+                    maxlength="5000"><?php echo htmlspecialchars($equipo['descripcion'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></textarea>
 
-        <br><br>
+            <br><br>
 
-        <label for="categoria_id">Categoria:</label>
-        <select id="categoria_id" name="categoria_id" required>
+            <label for="categoria_id">Categoria:</label>
+            <select id="categoria_id" name="categoria_id" required>
 
-            <?php foreach ($categorias as $categoria): ?>
-                <option value="<?php echo (int)$categoria['id']; ?>"
-                    <?php echo (int)$equipo['categoria_id'] === (int)$categoria['id'] ? 'selected' : ''; ?>>
+                <?php foreach ($categorias as $categoria): ?>
+                    <option value="<?php echo (int)$categoria['id']; ?>"
+                        <?php echo (int)$equipo['categoria_id'] === (int)$categoria['id'] ? 'selected' : ''; ?>>
 
-                    <?php echo htmlspecialchars($categoria['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <?php echo htmlspecialchars($categoria['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
 
-                </option>
-            <?php endforeach; ?>
+                    </option>
+                <?php endforeach; ?>
 
-        </select>
+            </select>
 
-        <br><br>
+            <br><br>
 
-        <p>
-            Estado actual:
-            <strong><?php echo htmlspecialchars($equipo['estado'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></strong>
-        </p>
-
-        <button type="submit">Guardar cambios</button>
-
-    </form>
-
-    <p><a href="equipos.php">Cancelar y volver</a></p>
-
-</body>
+            <p>
+                Estado actual:
+                <strong><?php echo htmlspecialchars($equipo['estado'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></strong>
+            </p>
+            <button type="submit">Guardar cambios</button>
+        </form>
+        <p><a href="equipos.php">Cancelar y volver</a></p>
+    </body>
 </html>

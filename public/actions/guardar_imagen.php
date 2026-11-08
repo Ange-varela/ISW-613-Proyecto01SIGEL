@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';

@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -103,12 +102,9 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <button type="submit" <?php echo empty($equipos) ? 'disabled' : ''; ?>>
                 Registrar solicitud
             </button>
-
         </form>
-
         <p>
             <a href="prestamos.php">Volver a prestamos</a>
         </p>
-
     </body>
 </html>

@@ -1,4 +1,3 @@
-
 # SIGEL - Sistema de Gestion de Equipos de Laboratorio
 
 Proyecto 1 del curso ISW-613 - Programacion de Ambientes Web I.

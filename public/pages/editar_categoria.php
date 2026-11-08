@@ -38,42 +38,38 @@ if (empty($_SESSION['csrf_token'])) {
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar categoria - SIGEL</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Editar categoria - SIGEL</title>
+    </head>
+    <body>
 
-    <h1>Editar categoria</h1>
+        <h1>Editar categoria</h1>
 
-    <!-- Formulario de edicion -->
-    <form action="../actions/actualizar_categoria.php" method="POST">
+        <!-- Formulario de edicion -->
+        <form action="../actions/actualizar_categoria.php" method="POST">
 
-        <input type="hidden" name="csrf_token"
-               value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+            <input type="hidden" name="csrf_token"
+                value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
-        <input type="hidden" name="id"
-               value="<?php echo (int)$categoria['id']; ?>">
+            <input type="hidden" name="id"
+                value="<?php echo (int)$categoria['id']; ?>">
 
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre"
-               maxlength="100" required
-               value="<?php echo htmlspecialchars($categoria['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre"
+                maxlength="100" required
+                value="<?php echo htmlspecialchars($categoria['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
-        <br><br>
+            <br><br>
 
-        <label for="descripcion">Descripcion:</label>
-        <textarea id="descripcion" name="descripcion"
-                  maxlength="255"><?php echo htmlspecialchars($categoria['descripcion'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></textarea>
+            <label for="descripcion">Descripcion:</label>
+            <textarea id="descripcion" name="descripcion"
+                    maxlength="255"><?php echo htmlspecialchars($categoria['descripcion'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></textarea>
 
-        <br><br>
-
-        <button type="submit">Guardar cambios</button>
-
-    </form>
-
-    <p><a href="categorias.php">Cancelar y volver</a></p>
-
-</body>
+            <br><br>
+            <button type="submit">Guardar cambios</button>
+        </form>
+        <p><a href="categorias.php">Cancelar y volver</a></p>
+    </body>
 </html>

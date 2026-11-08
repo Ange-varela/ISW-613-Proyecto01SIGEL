@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -120,10 +119,8 @@ $prestamos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </tbody>
         </table>
-
         <p>
             <a href="dashboard.php">Volver al menu principal</a>
         </p>
-
     </body>
 </html>

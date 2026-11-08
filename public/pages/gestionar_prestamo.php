@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -161,8 +160,6 @@ switch ($prestamo['estado']) {
                 <br>
             <?php endforeach; ?>
         <?php endif; ?>
-
         <p><a href="prestamos.php">Volver a prestamos</a></p>
-
     </body>
 </html>

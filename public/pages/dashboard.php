@@ -73,6 +73,5 @@ $nombre = htmlspecialchars(
         <form action="../actions/logout.php" method="POST">
             <button type="submit">Cerrar sesion</button>
         </form>
-
     </body>
 </html>

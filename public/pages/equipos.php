@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -131,10 +130,7 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
             </form>
         <?php endif; ?>
-
         <hr>
-
-
         <h2>Lista de equipos</h2>
 
         <!-- Buscar equipos -->
@@ -149,11 +145,8 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <button type="submit">Buscar</button>
 
             <a href="equipos.php">Limpiar</a>
-
         </form>
-
         <br>
-
         <!-- Mostrar los equipos -->
         <table border="1" cellpadding="8">
             <thead>
@@ -215,8 +208,6 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </tbody>
         </table>
-
         <p><a href="dashboard.php">Volver al menu principal</a></p>
-
     </body>
 </html>

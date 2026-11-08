@@ -1,4 +1,3 @@
-
 <?php
 // Cargar la conexion y autenticacion
 require_once __DIR__ . '/../../config/conexion.php';
@@ -93,14 +92,9 @@ if (empty($_SESSION['csrf_token'])) {
                 <?php endforeach; ?>
 
             </select>
-
             <br><br>
-
             <button type="submit">Guardar cambios</button>
-
         </form>
-
         <p><a href="usuarios.php">Cancelar y volver</a></p>
-
     </body>
 </html>

@@ -1,4 +1,3 @@
-
 <?php
 // Iniciar la sesion y cargar la conexion
 session_start();

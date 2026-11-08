@@ -1,4 +1,3 @@
-
 <?php
 // Iniciar la sesion
 session_start();
@@ -11,39 +10,35 @@ if (empty($_SESSION['csrf_token'])) {
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesion - SIGEL</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Iniciar sesion - SIGEL</title>
+    </head>
+    <body>
 
-    <h1>SIGEL</h1>
-    <h2>Iniciar sesion</h2>
+        <h1>SIGEL</h1>
+        <h2>Iniciar sesion</h2>
 
-    <?php if (isset($_GET['error'])): ?>
-        <p>Credenciales invalidas o acceso no permitido.</p>
-    <?php endif; ?>
+        <?php if (isset($_GET['error'])): ?>
+            <p>Credenciales invalidas o acceso no permitido.</p>
+        <?php endif; ?>
 
-    <!-- Formulario de inicio de sesion -->
-    <form action="actions/procesar_login.php" method="POST">
+        <!-- Formulario de inicio de sesion -->
+        <form action="actions/procesar_login.php" method="POST">
 
-        <input type="hidden" name="csrf_token"
-               value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
+            <input type="hidden" name="csrf_token"
+                value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
 
-        <label for="correo">Correo electronico:</label>
-        <input type="email" id="correo" name="correo" required>
+            <label for="correo">Correo electronico:</label>
+            <input type="email" id="correo" name="correo" required>
 
-        <br><br>
+            <br><br>
 
-        <label for="contrasena">Contrasena:</label>
-        <input type="password" id="contrasena" name="contrasena" required>
-
-        <br><br>
-
-        <button type="submit">Ingresar</button>
-
-    </form>
-
-</body>
+            <label for="contrasena">Contrasena:</label>
+            <input type="password" id="contrasena" name="contrasena" required>
+            <br><br>
+            <button type="submit">Ingresar</button>
+        </form>
+    </body>
 </html>
