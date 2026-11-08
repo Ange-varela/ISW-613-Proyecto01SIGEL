@@ -47,6 +47,12 @@ $nombre = htmlspecialchars(
             <p><a href="prestamos.php">Gestionar prestamos</a></p>
         <?php endif; ?>
 
+        <?php if (tienePermiso('crear_prestamo')): ?>
+            <p>
+                <a href="crear_prestamo.php">Registrar prestamo</a>
+            </p>
+        <?php endif; ?>
+
         <!-- Reportes del sistema -->
         <?php if (tienePermiso('ver_reportes')): ?>
             <p><a href="reportes.php">Consultar reportes</a></p>
