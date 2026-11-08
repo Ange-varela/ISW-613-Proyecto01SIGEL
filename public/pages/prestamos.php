@@ -35,6 +35,29 @@ $prestamos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     </head>
     <body>
         <h1>Gestion de prestamos</h1>
+        <?php
+        // Mostrar mensajes del registro de prestamos
+        $guardado = $_GET['guardado'] ?? '';
+        $error = $_GET['error'] ?? '';
+
+        if ($guardado === '1') {
+            echo '<p style="color: green;">Prestamo registrado correctamente.</p>';
+        }
+
+        if ($error === 'datos') {
+            echo '<p style="color: red;">Revise los datos del prestamo y seleccione al menos un equipo.</p>';
+        } elseif ($error === 'fechas') {
+            echo '<p style="color: red;">Las fechas ingresadas no son validas.</p>';
+        } elseif ($error === 'registro') {
+            echo '<p style="color: red;">No se pudo registrar el prestamo. Verifique que los equipos esten disponibles para esas fechas.</p>';
+        }
+        ?>
+
+        <?php if (tienePermiso('crear_prestamo')): ?>
+            <p>
+                <a href="crear_prestamo.php">Registrar nuevo prestamo</a>
+            </p>
+        <?php endif; ?>
         <h2>Lista de prestamos</h2>
         <table border="1" cellpadding="8">
             <thead>
