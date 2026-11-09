@@ -101,6 +101,8 @@ CREATE TABLE prestamos (
         'devuelto',
         'cancelado'
     ) NOT NULL DEFAULT 'solicitado',
+     -- Guarda el hash del codigo de retiro
+    codigo_hash VARCHAR(255) NULL,
     fecha_inicio DATETIME NOT NULL,
     fecha_fin DATETIME NOT NULL,
 

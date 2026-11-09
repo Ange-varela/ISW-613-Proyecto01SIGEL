@@ -76,14 +76,39 @@ try {
         throw new RuntimeException('Cambio de estado no permitido');
     }
 
-    // Actualizar el estado
-    $consulta = $pdo->prepare(
-        "UPDATE prestamos
-         SET estado = ?
-         WHERE id = ?"
-    );
+    
+    // Generar el codigo al aprobar el prestamo
+    $codigoRetiro = null;
+    $codigoHash = null;
 
-    $consulta->execute([$nuevoEstado, $prestamoId]);
+    if ($estadoActual === 'solicitado' && $nuevoEstado === 'aprobado') {
+        // Generar un codigo aleatorio de ocho digitos
+        $codigoRetiro = (string)random_int(10000000, 99999999);
+
+        // Guardar solo el hash del codigo
+        $codigoHash = password_hash($codigoRetiro, PASSWORD_DEFAULT);
+
+        $consulta = $pdo->prepare(
+            "UPDATE prestamos
+            SET estado = ?, codigo_hash = ?
+            WHERE id = ?"
+        );
+
+        $consulta->execute([
+            $nuevoEstado,
+            $codigoHash,
+            $prestamoId
+        ]);
+    } else {
+        // Actualizar los otros estados
+        $consulta = $pdo->prepare(
+            "UPDATE prestamos
+            SET estado = ?
+            WHERE id = ?"
+        );
+
+        $consulta->execute([$nuevoEstado, $prestamoId]);
+    }
 
     // Registrar el cambio en bitacora
     $consulta = $pdo->prepare(
@@ -107,9 +132,17 @@ try {
         $_SERVER['REMOTE_ADDR'] ?? null
     ]);
 
+    
     // Confirmar el cambio
     $pdo->commit();
 
+    // Mostrar el codigo una sola vez al aprobar
+    if ($codigoRetiro !== null) {
+        $_SESSION['codigo_retiro_temporal'] = [
+            'prestamo_id' => $prestamoId,
+            'codigo' => $codigoRetiro
+        ];
+    }
     header(
         'Location: ../pages/gestionar_prestamo.php?id=' .
         $prestamoId . '&actualizado=1'

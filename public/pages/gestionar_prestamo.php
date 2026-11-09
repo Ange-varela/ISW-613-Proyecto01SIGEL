@@ -55,6 +55,24 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
+
+// Recuperar el codigo temporal
+$codigoMostrar = null;
+
+if (isset($_SESSION['codigo_retiro_temporal'])) {
+    $temporal = $_SESSION['codigo_retiro_temporal'];
+
+    if (
+        is_array($temporal) &&
+        ($temporal['prestamo_id'] ?? null) === (int)$prestamo['id']
+    ) {
+        $codigoMostrar = $temporal['codigo'] ?? null;
+
+        // Eliminarlo de la sesion despues de recuperarlo
+        unset($_SESSION['codigo_retiro_temporal']);
+    }
+}
+
 // Determinar las acciones permitidas
 $acciones = [];
 
@@ -93,6 +111,19 @@ switch ($prestamo['estado']) {
             <p style="color: green;">Estado actualizado correctamente.</p>
         <?php endif; ?>
 
+        <!-- Mensajes de entrega -->
+        <?php if (($_GET['entregado'] ?? '') === '1'): ?>
+            <p style="color: green;">
+                Entrega registrada correctamente.
+            </p>
+        <?php endif; ?>
+
+        <?php if (($_GET['error_entrega'] ?? '') === '1'): ?>
+            <p style="color: red;">
+                No se pudo registrar la entrega. Verifique el codigo de retiro.
+            </p>
+        <?php endif; ?>
+
         <?php if (($_GET['error'] ?? '') === '1'): ?>
             <p style="color: red;">No se pudo cambiar el estado del prestamo.</p>
         <?php endif; ?>
@@ -119,6 +150,22 @@ switch ($prestamo['estado']) {
             <?php echo htmlspecialchars($prestamo['fecha_fin'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
         </p>
 
+        <!-- Mostrar el codigo generado -->
+        <?php if ($codigoMostrar !== null): ?>
+            <h2>Codigo de retiro</h2>
+
+            <p>
+                <strong>
+                    <?php echo htmlspecialchars($codigoMostrar, ENT_QUOTES, 'UTF-8'); ?>
+                </strong>
+            </p>
+
+            <p>
+                Guarde este codigo. Solo se muestra una vez
+                y sera necesario para entregar los equipos.
+            </p>
+        <?php endif; ?>
+
         <h2>Equipos solicitados</h2>
 
         <ul>
@@ -134,6 +181,36 @@ switch ($prestamo['estado']) {
                 </li>
             <?php endforeach; ?>
         </ul>
+        
+        <!-- Registrar entrega con codigo de retiro -->
+        <?php if ($prestamo['estado'] === 'aprobado'): ?>
+
+            <h2>Registrar entrega</h2>
+
+            <form action="../actions/entregar_prestamo.php" method="POST">
+
+                <input type="hidden" name="csrf_token"
+                    value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
+
+                <input type="hidden" name="prestamo_id"
+                    value="<?php echo (int)$prestamo['id']; ?>">
+
+                <label for="codigo_retiro">Codigo de retiro:</label>
+
+                <input type="text"
+                    id="codigo_retiro"
+                    name="codigo_retiro"
+                    inputmode="numeric"
+                    pattern="[0-9]{8}"
+                    maxlength="8"
+                    autocomplete="off"
+                    required>
+
+                <button type="submit">Confirmar entrega</button>
+
+            </form>
+
+        <?php endif; ?> 
 
         <h2>Acciones disponibles</h2>
 
