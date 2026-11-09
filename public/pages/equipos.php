@@ -173,6 +173,10 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo htmlspecialchars($equipo['categoria'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></td>
                             <td><?php echo htmlspecialchars($equipo['estado'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></td>
                             <td>
+                                <!-- Ver informacion del equipo -->
+                                <a href="ver_equipo.php?id=<?php echo (int)$equipo['id']; ?>">
+                                    Ver detalle
+                                </a>
                                 <?php if (tienePermiso('editar_equipo')): ?>
                                     <a href="editar_equipo.php?id=<?php echo (int)$equipo['id']; ?>">
                                         Editar
