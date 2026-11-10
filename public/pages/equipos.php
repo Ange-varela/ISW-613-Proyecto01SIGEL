@@ -31,21 +31,85 @@ if (!is_string($buscar)) {
 
 $buscar = mb_substr(trim($buscar), 0, 100);
 
-// Consultar los equipos activos
+
+ // Obtener la cantidad por pagina
+$opciones = [5, 10, 20];
+
+$porPagina = filter_input(INPUT_GET, 'por_pagina', FILTER_VALIDATE_INT);
+
+if (!in_array($porPagina, $opciones, true)) {
+    $porPagina = filter_var(
+        $_COOKIE['equipos_por_pagina'] ?? null,
+        FILTER_VALIDATE_INT
+    );
+}
+
+if (!in_array($porPagina, $opciones, true)) {
+    $porPagina = 5;
+}
+
+// Guardar la preferencia
+setcookie('equipos_por_pagina', (string)$porPagina, [
+    'expires' => time() + 30 * 24 * 60 * 60,
+    'path' => '/',
+    'secure' => !empty($_SERVER['HTTPS']) &&
+                $_SERVER['HTTPS'] !== 'off',
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+// Obtener la pagina actual
+$pagina = filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT);
+
+if (!$pagina || $pagina < 1) {
+    $pagina = 1;
+}
+
+// Preparar el filtro de busqueda
+$filtro = '%' . $buscar . '%';
+
+// Contar los equipos activos
+$sqlTotal = "SELECT COUNT(*)
+             FROM equipos e
+             WHERE e.activo = 1
+             AND (e.nombre LIKE :nombre OR e.codigo LIKE :codigo)";
+
+$consultaTotal = $pdo->prepare($sqlTotal);
+
+$consultaTotal->execute([
+    'nombre' => $filtro,
+    'codigo' => $filtro
+]);
+
+$totalEquipos = (int)$consultaTotal->fetchColumn();
+
+// Calcular las paginas
+$totalPaginas = max(1, (int)ceil($totalEquipos / $porPagina));
+
+if ($pagina > $totalPaginas) {
+    $pagina = $totalPaginas;
+}
+
+$inicio = ($pagina - 1) * $porPagina;
+
+// Consultar los equipos por pagina
 $sql = "SELECT e.id, e.codigo, e.nombre,
                e.estado, c.nombre AS categoria
         FROM equipos e
         INNER JOIN categorias c ON e.categoria_id = c.id
         WHERE e.activo = 1
         AND (e.nombre LIKE :nombre OR e.codigo LIKE :codigo)
-        ORDER BY e.nombre ASC, e.id ASC";
+        ORDER BY e.nombre ASC, e.id ASC
+        LIMIT :limite OFFSET :inicio";
 
 $consulta = $pdo->prepare($sql);
 
-$consulta->execute([
-    'nombre' => '%' . $buscar . '%',
-    'codigo' => '%' . $buscar . '%'
-]);
+$consulta->bindValue(':nombre', $filtro, PDO::PARAM_STR);
+$consulta->bindValue(':codigo', $filtro, PDO::PARAM_STR);
+$consulta->bindValue(':limite', $porPagina, PDO::PARAM_INT);
+$consulta->bindValue(':inicio', $inicio, PDO::PARAM_INT);
+
+$consulta->execute();
 
 $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -132,6 +196,26 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
         <hr>
         <h2>Lista de equipos</h2>
+        
+        <!-- Seleccionar cantidad de equipos -->
+        <form method="GET" action="equipos.php">
+
+            <input type="hidden" name="buscar"
+                value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+
+            <label for="por_pagina">Equipos por pagina:</label>
+
+            <select name="por_pagina" id="por_pagina">
+                <?php foreach ($opciones as $opcion): ?>
+                    <option value="<?php echo $opcion; ?>"
+                        <?php echo $porPagina === $opcion ? 'selected' : ''; ?>>
+                        <?php echo $opcion; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <button type="submit">Aplicar</button>
+        </form>
 
         <!-- Buscar equipos -->
         <form method="GET" action="equipos.php">
@@ -212,6 +296,32 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </tbody>
         </table>
+        
+        <!-- Navegar entre paginas -->
+        <p>
+            Pagina <?php echo $pagina; ?> de <?php echo $totalPaginas; ?>
+            (<?php echo $totalEquipos; ?> equipos)
+        </p>
+
+        <?php if ($pagina > 1): ?>
+            <a href="equipos.php?<?php echo htmlspecialchars(http_build_query([
+                'buscar' => $buscar,
+                'por_pagina' => $porPagina,
+                'pagina' => $pagina - 1
+            ]), ENT_QUOTES, 'UTF-8'); ?>">
+                Anterior
+            </a>
+        <?php endif; ?>
+
+        <?php if ($pagina < $totalPaginas): ?>
+            <a href="equipos.php?<?php echo htmlspecialchars(http_build_query([
+                'buscar' => $buscar,
+                'por_pagina' => $porPagina,
+                'pagina' => $pagina + 1
+            ]), ENT_QUOTES, 'UTF-8'); ?>">
+                Siguiente
+            </a>
+        <?php endif; ?>
         <p><a href="dashboard.php">Volver al menu principal</a></p>
     </body>
 </html>
