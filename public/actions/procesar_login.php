@@ -87,6 +87,13 @@ try {
 
     // Crear el token si marco recordarme
     if ($recordarme) {
+        // Eliminar los tokens vencidos
+        $consultaLimpiar = $pdo->prepare(
+            "DELETE FROM auth_tokens
+            WHERE expira_en <= NOW()"
+        );
+        $consultaLimpiar->execute();
+
         // Generar valores aleatorios
         $selector = bin2hex(random_bytes(12));
         $validator = bin2hex(random_bytes(32));

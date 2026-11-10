@@ -37,6 +37,7 @@ $porPagina = filter_var(
     FILTER_VALIDATE_INT
 );
 
+// Usar 10 registros si no hay una preferencia valida
 if (!in_array($porPagina, $opciones, true)) {
     $porPagina = 10;
 }

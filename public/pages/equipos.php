@@ -44,8 +44,9 @@ if (!in_array($porPagina, $opciones, true)) {
     );
 }
 
+// Usar 10 registros si no hay una preferencia valida
 if (!in_array($porPagina, $opciones, true)) {
-    $porPagina = 5;
+    $porPagina = 10;
 }
 
 // Guardar la preferencia
@@ -195,6 +196,80 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </form>
         <?php endif; ?>
         <hr>
+        
+        <?php
+        // Obtener los equipos recientes de la cookie
+        $recientes = [];
+
+        if (isset($_COOKIE['equipos_recientes'])) {
+            $datos = json_decode($_COOKIE['equipos_recientes'], true);
+
+            if (is_array($datos)) {
+                foreach ($datos as $id) {
+                    if (is_int($id) && $id > 0) {
+                        $recientes[] = $id;
+                    }
+                }
+            }
+        }
+
+        // Conservar solo cinco identificadores
+        $recientes = array_slice(array_unique($recientes), 0, 5);
+
+        $equiposRecientes = [];
+
+        if (!empty($recientes)) {
+            // Consultar solamente los equipos activos
+            $marcadores = implode(',', array_fill(0, count($recientes), '?'));
+
+            $sqlRecientes = "SELECT id, codigo, nombre
+                            FROM equipos
+                            WHERE activo = 1
+                            AND id IN ($marcadores)";
+
+            $consultaRecientes = $pdo->prepare($sqlRecientes);
+            $consultaRecientes->execute($recientes);
+
+            $resultados = $consultaRecientes->fetchAll(PDO::FETCH_ASSOC);
+
+            // Mantener el orden de consulta
+            $porId = [];
+
+            foreach ($resultados as $equipo) {
+                $porId[(int)$equipo['id']] = $equipo;
+            }
+
+            foreach ($recientes as $id) {
+                if (isset($porId[$id])) {
+                    $equiposRecientes[] = $porId[$id];
+                }
+            }
+        }
+        ?>
+
+        <!-- Mostrar los ultimos equipos consultados -->
+        <h2>Ultimos equipos consultados</h2>
+
+        <?php if (empty($equiposRecientes)): ?>
+            <p>No hay equipos consultados recientemente.</p>
+        <?php else: ?>
+            <ul>
+                <?php foreach ($equiposRecientes as $reciente): ?>
+                    <li>
+                        <a href="ver_equipo.php?id=<?php echo (int)$reciente['id']; ?>">
+                            <?php
+                            echo htmlspecialchars(
+                                $reciente['codigo'] . ' - ' . $reciente['nombre'],
+                                ENT_QUOTES | ENT_SUBSTITUTE,
+                                'UTF-8'
+                            );
+                            ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
         <h2>Lista de equipos</h2>
         
         <!-- Seleccionar cantidad de equipos -->
