@@ -32,12 +32,18 @@ if (empty($_SESSION['csrf_token'])) {
 
             <label for="correo">Correo electronico:</label>
             <input type="email" id="correo" name="correo" required>
-
             <br><br>
-
             <label for="contrasena">Contrasena:</label>
             <input type="password" id="contrasena" name="contrasena" required>
             <br><br>
+            <!-- Mantener la sesion iniciada -->
+            <p>
+                <label>
+                    <input type="checkbox" name="recordarme" value="1">
+                    Recordarme
+                </label>
+            </p>
+
             <button type="submit">Ingresar</button>
         </form>
     </body>

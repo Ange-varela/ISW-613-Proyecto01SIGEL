@@ -24,6 +24,8 @@ if (
 // Obtener los datos del formulario
 $correo = trim($_POST['correo'] ?? '');
 $contrasena = $_POST['contrasena'] ?? '';
+// Obtener la opcion de recordarme
+$recordarme = ($_POST['recordarme'] ?? '') === '1';
 
 // Validar los datos
 if (
@@ -82,6 +84,43 @@ try {
     $_SESSION['rol_id'] = $usuario['rol_id'];
     $_SESSION['nombre'] = $usuario['nombre'];
     $_SESSION['ultima_actividad'] = time();
+
+    // Crear el token si marco recordarme
+    if ($recordarme) {
+        // Generar valores aleatorios
+        $selector = bin2hex(random_bytes(12));
+        $validator = bin2hex(random_bytes(32));
+
+        // Guardar solo el hash del token
+        $validatorHash = hash('sha256', $validator);
+
+        // Definir la fecha de vencimiento
+        $expira = date('Y-m-d H:i:s', time() + 30 * 24 * 60 * 60);
+
+        // Guardar el token en MySQL
+        $sqlToken = "INSERT INTO auth_tokens
+                    (usuario_id, selector, validator_hash, expira_en)
+                    VALUES (?, ?, ?, ?)";
+
+        $consultaToken = $pdo->prepare($sqlToken);
+
+        $consultaToken->execute([
+            $usuario['id'],
+            $selector,
+            $validatorHash,
+            $expira
+        ]);
+
+        // Guardar la cookie en el navegador
+        setcookie('sigel_recordarme', $selector . ':' . $validator, [
+            'expires' => time() + 30 * 24 * 60 * 60,
+            'path' => '/',
+            'secure' => !empty($_SERVER['HTTPS']) &&
+                        $_SERVER['HTTPS'] !== 'off',
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+    }
 
     // Redirigir al panel principal
     header('Location: ../pages/dashboard.php');
