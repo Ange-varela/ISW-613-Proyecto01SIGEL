@@ -2,6 +2,12 @@
 // Iniciar la sesion
 require_once __DIR__ . '/../includes/auth.php';
 
+// Si ya tiene sesion o una cookie de recordarme valida, ir al menu
+if (isset($_SESSION['usuario_id']) || recuperarSesion()) {
+    header('Location: /pages/dashboard.php');
+    exit;
+}
+
 // Crear un token de seguridad
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));

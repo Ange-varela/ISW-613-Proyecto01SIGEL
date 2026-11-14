@@ -54,7 +54,7 @@ try {
     if (
         !$usuario ||
         !$usuario['activo'] ||
-        $usuario['intentos_fallidos'] >= 5 ||
+        $usuario['intentos_fallidos'] >= 3 ||
         !password_verify($contrasena, $usuario['password_hash'])
     ) {
         // Registrar un intento fallido
@@ -62,7 +62,7 @@ try {
             $actualizar = $pdo->prepare(
                 "UPDATE usuarios
                  SET intentos_fallidos = intentos_fallidos + 1
-                 WHERE id = :id AND intentos_fallidos < 5"
+                 WHERE id = :id AND intentos_fallidos < 3"
             );
             $actualizar->execute(['id' => $usuario['id']]);
         }

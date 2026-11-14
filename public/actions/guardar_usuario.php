@@ -50,7 +50,7 @@ if (
     mb_strlen($nombre) > 100 ||
     !filter_var($correo, FILTER_VALIDATE_EMAIL) ||
     strlen($correo) > 150 ||
-    strlen($contrasena) < 10 ||
+    strlen($contrasena) < 8 ||
     strlen($contrasena) > 72 ||
     !$rolId ||
     $rolId < 1

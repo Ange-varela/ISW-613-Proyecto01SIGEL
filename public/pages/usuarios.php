@@ -161,7 +161,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
                 <label for="contrasena">Contrasena:</label>
                 <input type="password" id="contrasena" name="contrasena"
-                    minlength="10" maxlength="72" required>
+                    minlength="8" maxlength="72" required>
 
                 <br><br>
 
