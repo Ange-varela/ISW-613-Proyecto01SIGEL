@@ -74,6 +74,8 @@ $formatos = [
     'image/png' => 'png',
     'image/webp' => 'webp'
 ];
+// Definir las extensiones permitidas
+$extensionesPermitidas = ['jpg', 'jpeg', 'png', 'webp'];
 
 $archivosGuardados = [];
 
@@ -114,6 +116,22 @@ try {
         $temporal = $imagenes['tmp_name'][$i];
         $tamano = $imagenes['size'][$i];
 
+        // Obtener el nombre original del archivo
+        $nombreOriginal = $imagenes['name'][$i];
+
+        // Validar la extension del archivo
+        if (!is_string($nombreOriginal)) {
+            throw new RuntimeException('Nombre de archivo no valido');
+        }
+
+        $extension = strtolower(
+            pathinfo($nombreOriginal, PATHINFO_EXTENSION)
+        );
+
+        if (!in_array($extension, $extensionesPermitidas, true)) {
+            throw new RuntimeException('Extension no permitida');
+        }
+        
         // Validar el tamano y archivo temporal
         if (
             !is_string($temporal) ||

@@ -11,6 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit('Metodo no permitido');
 }
 
+// Validar el token CSRF
+$csrfFormulario = $_POST['csrf_token'] ?? '';
+$csrfSesion = $_SESSION['csrf_token'] ?? '';
+
+if (
+    !is_string($csrfFormulario) ||
+    !is_string($csrfSesion) ||
+    $csrfFormulario === '' ||
+    !hash_equals($csrfSesion, $csrfFormulario)
+) {
+    http_response_code(403);
+    exit('Token CSRF invalido');
+}
+
 // Obtener la cookie de recordarme
 $cookie = $_COOKIE['sigel_recordarme'] ?? '';
 

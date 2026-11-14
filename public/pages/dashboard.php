@@ -5,6 +5,11 @@ require_once __DIR__ . '/../../includes/auth.php';
 // Verificar que exista una sesion valida
 verificarSesion();
 
+// Crear el token de seguridad
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Preparar el nombre para mostrarlo
 $nombre = htmlspecialchars(
     $_SESSION['nombre'],
@@ -71,6 +76,15 @@ $nombre = htmlspecialchars(
 
         <!-- Cerrar sesion -->
         <form action="../actions/logout.php" method="POST">
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="<?php echo htmlspecialchars(
+                    $_SESSION['csrf_token'],
+                    ENT_QUOTES | ENT_SUBSTITUTE,
+                    'UTF-8'
+                ); ?>"
+            >
             <button type="submit">Cerrar sesion</button>
         </form>
     </body>
