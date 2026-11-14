@@ -1,6 +1,6 @@
 <?php
 // Iniciar la sesion
-session_start();
+require_once __DIR__ . '/../includes/auth.php';
 
 // Crear un token de seguridad
 if (empty($_SESSION['csrf_token'])) {

@@ -1,10 +1,22 @@
 <?php
-// Iniciar la sesion si no esta iniciada
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// Iniciar la sesion con una cookie segura
+function iniciarSesion() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => '/',
+            'secure' => !empty($_SERVER['HTTPS']) &&
+                        $_SERVER['HTTPS'] !== 'off',
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
 
- // Recuperar la sesion con la cookie de recordarme
+        session_start();
+    }
+}
+iniciarSesion();
+
+// Recuperar la sesion con la cookie de recordarme
 function recuperarSesion() {
     $cookie = $_COOKIE['sigel_recordarme'] ?? '';
 

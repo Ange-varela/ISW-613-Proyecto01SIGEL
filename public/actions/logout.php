@@ -1,6 +1,6 @@
 <?php
 // Iniciar la sesion
-session_start();
+require_once __DIR__ . '/../../includes/auth.php';
 
 // Cargar la conexion
 require_once __DIR__ . '/../../config/conexion.php';
