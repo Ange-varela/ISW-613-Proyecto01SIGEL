@@ -63,13 +63,13 @@ AND p.clave IN (
 -- Registrar el usuario administrador de prueba
 INSERT INTO usuarios (rol_id, nombre, correo, password_hash, activo, intentos_fallidos)
 SELECT id, 'Administrador SIGEL', 'admin@sigel.local',
-       '$2y$10$LNHoElEyRM2MYVHUwtiBhOXdhKOBWmYHCX1K56SDnUvS8mmy7/are', 1, 0 --Admin12345!
+       '$2y$10$PxStt/eecC6/iWP1QMkqXO2eERna8U0GnIdvmaahPTxBfw3IVDZuW', 1, 0 -- Admin123
 FROM roles
 WHERE nombre = 'administrador';
 
 -- Registrar el usuario operador de prueba
 INSERT INTO usuarios (rol_id, nombre, correo, password_hash, activo, intentos_fallidos)
 SELECT id, 'Operador SIGEL', 'operador@sigel.local',
-       '$2y$10$.QiLl38q.iGzLGGUVNimB.WALWtyLN0Vsmsyn5X87xAGa9sI0eT8e', 1, 0 --Operador12345!
+       '$2y$10$CjFTtS5d/uyRDU8suiRddu3PXA7pZg48E6XOeISRmN95wfseodjf2', 1, 0 -- Operador123
 FROM roles
 WHERE nombre = 'operador';
