@@ -1,137 +1,136 @@
-# SIGEL - Sistema de Gestion de Equipos de Laboratorio
+# SIGEL - Sistema de Gestion de Prestamo de Equipos de Laboratorio
 
-Proyecto 1 del curso ISW-613 - Programacion de Ambientes Web I.
+Proyecto 1 del curso ISW-613 Programacion en Ambiente Web I (UTN).
 
-## Descripcion
+## Que es SIGEL
 
-SIGEL es una aplicacion web desarrollada en PHP y MySQL para gestionar equipos de laboratorio y sus prestamos.
+Es una pagina web para llevar el control de los equipos de un laboratorio (laptops, proyectores, routers, etc.) y de los prestamos que se le hacen a los profesores.
 
-Permite administrar usuarios, categorias, equipos, imagenes y profesores, asi como registrar y gestionar solicitudes de prestamo.
+Con SIGEL se puede:
 
-## Tecnologias utilizadas
+- Guardar los equipos y organizarlos por categorias.
+- Subir fotos de cada equipo.
+- Registrar a los profesores que piden prestado.
+- Crear prestamos de uno o varios equipos para ciertas fechas.
+- Aprobar, entregar, devolver o cancelar un prestamo.
+- Ver cuales son los equipos que mas se prestan y descargar ese reporte en Excel (CSV).
 
-- PHP 8
-- MySQL
-- HTML
-- CSS
-- JavaScript
-- Apache (XAMPP)
-- PDO para la conexion con MySQL
-- Git y GitHub
+## Quien puede hacer que
 
-## Funcionalidades implementadas
+Hay dos tipos de usuario:
 
-### Autenticacion
-- Inicio y cierre de sesion.
-- Roles de administrador y operador.
-- Control de permisos.
-- Proteccion de formularios mediante tokens CSRF.
-- Almacenamiento seguro de contrasenas.
+- **Administrador:** maneja los usuarios, las categorias, los equipos, los profesores y ve los reportes.
+- **Operador:** consulta los equipos y se encarga de los prestamos.
 
-### Usuarios
-- Registrar usuarios.
-- Consultar y buscar usuarios.
-- Editar usuarios.
-- Desactivar usuarios.
+Si un operador intenta entrar a una pagina del administrador escribiendo la direccion, el sistema no lo deja.
 
-### Categorias
-- Registrar categorias.
-- Consultar y buscar categorias.
-- Editar categorias.
-- Desactivar categorias.
-- Paginacion y preferencia de registros por pagina.
+## Usuarios de prueba
 
-### Equipos
-- Registrar equipos.
-- Consultar y buscar equipos.
-- Editar equipos.
-- Desactivar equipos.
-- Subir varias imagenes por equipo.
-- Visualizar las imagenes almacenadas.
+| Tipo | Correo | Contrasena |
+| --- | --- | --- |
+| Administrador | admin@sigel.local | Admin123 |
+| Operador | operador@sigel.local | Operador123 |
 
-### Profesores
-- Consultar profesores.
-- Buscar por nombre o correo.
-- Registrar profesores.
+## Que se necesita
 
-### Prestamos
-- Registrar solicitudes con uno o varios equipos.
-- Asociar cada solicitud con un profesor y un operador.
-- Validar las fechas de inicio y fin.
-- Evitar prestamos superpuestos para un mismo equipo.
-- Aprobar solicitudes.
-- Cancelar prestamos.
-- Liberar la reserva de un equipo al cancelar.
+- XAMPP (trae Apache, MySQL y PHP 8).
+- Un navegador (Chrome, Edge, etc.).
+- Git, para descargar el proyecto.
 
-### Bitacora
-- Registrar operaciones importantes del sistema.
-- Guardar el usuario responsable y los cambios realizados.
+## Como instalarlo desde cero
 
-## Funcionalidades pendientes
+### 1. Descargar el proyecto
 
-- Registrar la entrega y devolucion de equipos.
-- Implementar el codigo de retiro seguro (Regla 18).
-- Generar reportes y exportarlos a CSV.
-- Completar las funcionalidades adicionales de cookies.
-- Realizar las pruebas finales.
+Abrir una terminal dentro de `C:\xampp\htdocs` y escribir:
 
-## Requisitos
+```
+git clone https://github.com/Ange-varela/ISW-613-Proyecto01SIGEL.git Proyecto01SIGEL
+```
 
-- XAMPP con Apache y MySQL.
-- PHP 8 o superior.
-- Navegador web.
-- Git (opcional).
+### 2. Crear el archivo de configuracion
 
-## Instalacion local
+Dentro de la carpeta `config`, crear un archivo llamado `.env` con esto (cambiar el usuario y la contrasena si su MySQL tiene otros):
 
-1. Clonar el repositorio en la carpeta htdocs de XAMPP.
+```
+DB_HOST=localhost
+DB_NAME=sigel_db
+DB_USER=root
+DB_PASS=
+DB_CHARSET=utf8mb4
+```
 
-2. Iniciar Apache y MySQL.
+Este archivo no se sube a GitHub porque tiene las contrasenas de la base de datos.
 
-3. Crear la base de datos sigel_db en phpMyAdmin.
+### 3. Crear la base de datos
 
-4. Ejecutar los archivos SQL del proyecto:
+1. Abrir XAMPP y darle Start a Apache y a MySQL.
+2. En la fila de MySQL darle al boton **Admin** (se abre phpMyAdmin).
+3. Crear una base de datos llamada `sigel_db`.
+4. Entrar a `sigel_db`, ir a **Importar** y cargar primero `sql/schema.sql` y despues `sql/seed.sql`.
 
-   - sql/schema.sql
-   - sql/seed.sql
+### 4. Configurar la direccion sigel.local
 
-5. Configurar las credenciales de la base de datos en config/.env.
+**a)** Abrir con el Bloc de notas el archivo `C:\xampp\apache\conf\extra\httpd-vhosts.conf` y agregar al final:
 
-6. Configurar el host virtual sigel.local en Apache y Windows.
+```
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot "C:/xampp/htdocs"
+</VirtualHost>
 
-7. Reiniciar Apache.
+<VirtualHost *:80>
+    ServerName sigel.local
+    DocumentRoot "C:/xampp/htdocs/Proyecto01SIGEL/public"
 
-8. Acceder desde el navegador:
+    <Directory "C:/xampp/htdocs/Proyecto01SIGEL/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
 
-   http://sigel.local/
+Solo la carpeta `public` queda visible en el navegador. Las demas carpetas (config, includes, sql, storage) quedan protegidas.
 
-## Estructura del proyecto
+**b)** Abrir el Bloc de notas **como administrador**, abrir el archivo `C:\Windows\System32\drivers\etc\hosts` y agregar al final:
 
-- config/: configuracion y conexion a la base de datos.
-- includes/: funciones de autenticacion y permisos.
-- public/: paginas y acciones de la aplicacion.
-- sql/: estructura y datos iniciales de MySQL.
-- storage/equipos/: almacenamiento privado de imagenes.
+```
+127.0.0.1   sigel.local
+```
 
-## Seguridad
+**c)** En XAMPP darle Stop y despues Start a Apache.
 
-El sistema utiliza:
+### 5. Entrar
 
-- Consultas preparadas con PDO.
-- Validacion de datos.
-- Proteccion contra CSRF.
-- Escapado de contenido HTML.
-- Contrasenas protegidas mediante hash.
-- Sesiones y control de permisos.
-- Transacciones para operaciones importantes.
-- Validacion de imagenes antes de almacenarlas.
+Abrir el navegador en `http://sigel.local/` e iniciar sesion con alguno de los usuarios de prueba.
 
-## Estado del proyecto
+## Como estan organizadas las carpetas
 
-En desarrollo.
+```
+Proyecto01SIGEL/
+├── config/      conexion a la base de datos y el archivo .env
+├── includes/    funciones que usan todas las paginas (sesion, permisos, token, menu)
+├── sql/         schema.sql (las tablas) y seed.sql (datos de prueba)
+├── storage/     fotos de los equipos (no se pueden abrir directo desde el navegador)
+└── public/      lo unico que se ve en el navegador
+    ├── pages/   las pantallas (listas y formularios)
+    ├── actions/ los archivos que guardan, editan o eliminan y luego regresan a la pantalla
+    ├── css/     los colores y el diseno
+    └── login.php
+```
 
-Proyecto academico desarrollado como parte del curso ISW-613.
+## Seguridad que tiene
 
-## Repositorio
+- Las contrasenas se guardan cifradas, nunca como texto normal.
+- Las consultas a la base de datos se hacen con sentencias preparadas, para evitar inyeccion SQL.
+- Todo lo que se muestra en pantalla pasa por `htmlspecialchars`, para evitar XSS.
+- Todos los formularios llevan un token secreto (CSRF), para que nadie pueda enviarlos desde otra pagina.
+- La sesion se cierra sola despues de 30 minutos sin usar el sistema.
+- Despues de 3 intentos fallidos la cuenta se bloquea.
+- Las fotos se revisan antes de guardarlas (tamano, tipo y extension) y se guardan con un nombre nuevo.
+- Los errores se guardan en un archivo y al usuario solo se le muestra un mensaje general.
 
-https://github.com/Ange-varela/ISW-613-Proyecto01SIGEL
+## Cookies que usa
+
+- **sigel_recordarme:** para no tener que poner la contrasena otra vez si se marco "Recordarme".
+- **categorias_por_pagina, equipos_por_pagina, usuarios_por_pagina:** recuerdan cuantos registros quiere ver cada persona en cada lista.
+- **equipos_recientes:** guarda los ultimos 5 equipos que se consultaron.
