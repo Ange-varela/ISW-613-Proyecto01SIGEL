@@ -101,14 +101,10 @@ setcookie('equipos_recientes', json_encode($historial), [
 ]);
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Detalle del equipo - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Detalle del equipo';
+require __DIR__ . '/../../includes/header.php';
+?>
 
         <h1>Detalle del equipo</h1>
 
@@ -154,6 +150,5 @@ setcookie('equipos_recientes', json_encode($historial), [
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
-        <p><a href="equipos.php">Volver a equipos</a></p>
-    </body>
-</html>
+        <p><a class="boton boton-secundario" href="equipos.php">Volver a equipos</a></p>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

@@ -33,14 +33,10 @@ $consulta->execute();
 $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Crear prestamo - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Crear prestamo';
+require __DIR__ . '/../../includes/header.php';
+?>
         <h1>Registrar solicitud de prestamo</h1>
         <form action="../actions/guardar_prestamo.php" method="POST">
             <input type="hidden" name="csrf_token"
@@ -104,7 +100,6 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </button>
         </form>
         <p>
-            <a href="prestamos.php">Volver a prestamos</a>
+            <a class="boton boton-secundario" href="prestamos.php">Volver a prestamos</a>
         </p>
-    </body>
-</html>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

@@ -45,14 +45,10 @@ if (empty($_SESSION['csrf_token'])) {
 }
 ?>
 
-<!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Editar usuario - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Editar usuario';
+require __DIR__ . '/../../includes/header.php';
+?>
 
         <h1>Editar usuario</h1>
 
@@ -96,5 +92,4 @@ if (empty($_SESSION['csrf_token'])) {
             <button type="submit">Guardar cambios</button>
         </form>
         <p><a href="usuarios.php">Cancelar y volver</a></p>
-    </body>
-</html>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

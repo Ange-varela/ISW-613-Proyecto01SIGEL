@@ -85,69 +85,58 @@ $consulta->execute();
 $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Categorias - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Categorias';
+require __DIR__ . '/../../includes/header.php';
+?>
 
-        <h1>Gestion de categorias</h1>
+        <!-- Titulo y boton para agregar -->
+        <div class="encabezado">
+            <h1>Categorias</h1>
+        </div>
 
-        <h2>Registrar categoria</h2>
+        <!-- Formulario para registrar categorias (se abre con el boton) -->
+        <?php if (tienePermiso('crear_categoria')): ?>
+            <details class="agregar">
+                <summary class="boton">
+                    <span class="abrir">+ Agregar categoria</span>
+                    <span class="cerrar">Cancelar y volver a la lista</span>
+                </summary>
 
-        <!-- Formulario para registrar categorias -->
-        <form action="../actions/guardar_categoria.php" method="POST">
+                <form class="panel" action="../actions/guardar_categoria.php" method="POST">
+                    <input type="hidden" name="csrf_token"
+                        value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
-            <input type="hidden" name="csrf_token"
-                value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <p>
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre"
+                            maxlength="100" required>
+                    </p>
 
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre"
-                maxlength="100" required>
+                    <p>
+                        <label for="descripcion">Descripcion:</label>
+                        <textarea id="descripcion" name="descripcion"
+                            maxlength="255"></textarea>
+                    </p>
 
-            <br><br>
+                    <button type="submit">Guardar categoria</button>
+                </form>
+            </details>
+        <?php endif; ?>
 
-            <label for="descripcion">Descripcion:</label>
-            <textarea id="descripcion" name="descripcion"
-                    maxlength="255"></textarea>
-
-            <br><br>
-
-            <button type="submit">Guardar categoria</button>
-        </form>
-
-        <hr>
-
-        <!-- Buscar categorias -->
-        <form method="GET" action="categorias.php">
-
-            <label for="buscar">Buscar categoria:</label>
-
+        <!-- Buscar y cantidad por pagina -->
+        <form class="barra" method="GET" action="categorias.php">
             <input type="text" id="buscar" name="buscar"
-                maxlength="100"
+                maxlength="100" placeholder="Buscar categoria..."
                 value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-
-            <input type="hidden" name="por_pagina"
-                value="<?php echo $porPagina; ?>">
 
             <button type="submit">Buscar</button>
-            <a href="categorias.php">Limpiar</a>
-        </form>
+            <a class="boton boton-secundario" href="categorias.php">Limpiar</a>
 
-        <h2>Lista de categorias</h2>
+            <span class="separar"></span>
 
-        <!-- Seleccionar registros por pagina -->
-        <form method="GET" action="categorias.php">
-
-            <input type="hidden" name="buscar"
-                value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-
-            <label for="por_pagina">Registros por pagina:</label>
-
-            <select name="por_pagina" id="por_pagina">
+            <label for="por_pagina">Por pagina:</label>
+            <select name="por_pagina" id="por_pagina" onchange="this.form.submit()">
                 <?php foreach ($opciones as $cantidad): ?>
                     <option value="<?php echo $cantidad; ?>"
                         <?php echo $porPagina === $cantidad ? 'selected' : ''; ?>>
@@ -155,14 +144,10 @@ $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
                     </option>
                 <?php endforeach; ?>
             </select>
-
-            <button type="submit">Mostrar</button>
         </form>
 
-        <br>
-
         <!-- Mostrar las categorias -->
-        <table border="1" cellpadding="8">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -190,7 +175,7 @@ $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             
                             <td>
                                 <?php if (tienePermiso('editar_categoria')): ?>
-                                    <a href="editar_categoria.php?id=<?php echo (int)$categoria['id']; ?>">
+                                    <a class="boton boton-editar" href="editar_categoria.php?id=<?php echo (int)$categoria['id']; ?>">
                                         Editar
                                     </a>
                                 <?php endif; ?>
@@ -220,31 +205,24 @@ $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </table>
 
         <!-- Navegacion entre paginas -->
-        <p>
-            Pagina <?php echo $pagina; ?>
-            de <?php echo $totalPaginas; ?>
-        </p>
+        <div class="paginacion">
+            <?php if ($pagina > 1): ?>
+                <a class="boton boton-secundario" href="?<?php echo htmlspecialchars(http_build_query([
+                    'buscar' => $buscar,
+                    'por_pagina' => $porPagina,
+                    'pagina' => $pagina - 1
+                ]), ENT_QUOTES, 'UTF-8'); ?>">Anterior</a>
+            <?php endif; ?>
 
-        <?php if ($pagina > 1): ?>
-            <a href="?<?php echo htmlspecialchars(http_build_query([
-                'buscar' => $buscar,
-                'por_pagina' => $porPagina,
-                'pagina' => $pagina - 1
-            ]), ENT_QUOTES, 'UTF-8'); ?>">
-                Anterior
-            </a>
-        <?php endif; ?>
+            <span>Pagina <?php echo $pagina; ?> de <?php echo $totalPaginas; ?></span>
 
-        <?php if ($pagina < $totalPaginas): ?>
-            <a href="?<?php echo htmlspecialchars(http_build_query([
-                'buscar' => $buscar,
-                'por_pagina' => $porPagina,
-                'pagina' => $pagina + 1
-            ]), ENT_QUOTES, 'UTF-8'); ?>">
-                Siguiente
-            </a>
-        <?php endif; ?>
-        <hr>
-        <p><a href="dashboard.php">Volver al menu principal</a></p>
-    </body>
-</html>
+            <?php if ($pagina < $totalPaginas): ?>
+                <a class="boton boton-secundario" href="?<?php echo htmlspecialchars(http_build_query([
+                    'buscar' => $buscar,
+                    'por_pagina' => $porPagina,
+                    'pagina' => $pagina + 1
+                ]), ENT_QUOTES, 'UTF-8'); ?>">Siguiente</a>
+            <?php endif; ?>
+        </div>
+
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

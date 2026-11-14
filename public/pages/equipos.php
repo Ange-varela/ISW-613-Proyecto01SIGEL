@@ -115,48 +115,48 @@ $consulta->execute();
 $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Equipos - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Equipos';
+require __DIR__ . '/../../includes/header.php';
+?>
 
-        <h1>Gestion de equipos</h1>
+        <h1>Equipos</h1>
         <!-- Mostrar mensajes del sistema -->
         <?php if (($_GET['guardado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Equipo registrado correctamente.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['actualizado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Equipo actualizado correctamente.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p style="color: red;">
+            <p class="mensaje error">
                 No se pudo completar la operacion. Verifique los datos.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['eliminado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Equipo eliminado correctamente.
             </p>
         <?php endif; ?>
 
         
         
-        <h2>Registrar equipo</h2>
-
-        <!-- Formulario para registrar equipos -->
+        <!-- Formulario para registrar equipos (se abre con el boton) -->
         <?php if (tienePermiso('crear_equipo')): ?>
-            <form action="../actions/guardar_equipo.php" method="POST">
+            <details class="agregar">
+                <summary class="boton">
+                    <span class="abrir">+ Agregar equipo</span>
+                    <span class="cerrar">Cancelar y volver a la lista</span>
+                </summary>
+
+            <form class="panel" action="../actions/guardar_equipo.php" method="POST">
 
                 <input type="hidden" name="csrf_token"
                     value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -194,8 +194,8 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <button type="submit">Guardar equipo</button>
 
             </form>
+            </details>
         <?php endif; ?>
-        <hr>
         
         <?php
         // Obtener los equipos recientes de la cookie
@@ -248,12 +248,12 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         ?>
 
         <!-- Mostrar los ultimos equipos consultados -->
-        <h2>Ultimos equipos consultados</h2>
+        <h2>Consultados recientemente</h2>
 
         <?php if (empty($equiposRecientes)): ?>
             <p>No hay equipos consultados recientemente.</p>
         <?php else: ?>
-            <ul>
+            <ul class="recientes">
                 <?php foreach ($equiposRecientes as $reciente): ?>
                     <li>
                         <a href="ver_equipo.php?id=<?php echo (int)$reciente['id']; ?>">
@@ -270,44 +270,31 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </ul>
         <?php endif; ?>
 
-        <h2>Lista de equipos</h2>
-        
-        <!-- Seleccionar cantidad de equipos -->
-        <form method="GET" action="equipos.php">
-
-            <input type="hidden" name="buscar"
-                value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-
-            <label for="por_pagina">Equipos por pagina:</label>
-
-            <select name="por_pagina" id="por_pagina">
-                <?php foreach ($opciones as $opcion): ?>
-                    <option value="<?php echo $opcion; ?>"
-                        <?php echo $porPagina === $opcion ? 'selected' : ''; ?>>
-                        <?php echo $opcion; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <button type="submit">Aplicar</button>
-        </form>
-
-        <!-- Buscar equipos -->
-        <form method="GET" action="equipos.php">
-
-            <label for="buscar">Buscar equipo:</label>
-
+                
+        <!-- Buscar y cantidad por pagina -->
+        <form class="barra" method="GET" action="equipos.php">
             <input type="text" id="buscar" name="buscar"
-                maxlength="100"
+                maxlength="150" placeholder="Buscar por codigo o nombre..."
                 value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
             <button type="submit">Buscar</button>
+            <a class="boton boton-secundario" href="equipos.php">Limpiar</a>
 
-            <a href="equipos.php">Limpiar</a>
+            <span class="separar"></span>
+
+            <label for="por_pagina">Por pagina:</label>
+            <select name="por_pagina" id="por_pagina" onchange="this.form.submit()">
+                <?php foreach ($opciones as $cantidad): ?>
+                    <option value="<?php echo $cantidad; ?>"
+                        <?php echo $porPagina === $cantidad ? 'selected' : ''; ?>>
+                        <?php echo $cantidad; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </form>
-        <br>
+
         <!-- Mostrar los equipos -->
-        <table border="1" cellpadding="8">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -372,31 +359,24 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </tbody>
         </table>
         
-        <!-- Navegar entre paginas -->
-        <p>
-            Pagina <?php echo $pagina; ?> de <?php echo $totalPaginas; ?>
-            (<?php echo $totalEquipos; ?> equipos)
-        </p>
+        <!-- Navegacion entre paginas -->
+        <div class="paginacion">
+            <?php if ($pagina > 1): ?>
+                <a class="boton boton-secundario" href="equipos.php?<?php echo htmlspecialchars(http_build_query([
+                    'buscar' => $buscar,
+                    'por_pagina' => $porPagina,
+                    'pagina' => $pagina - 1
+                ]), ENT_QUOTES, 'UTF-8'); ?>">Anterior</a>
+            <?php endif; ?>
 
-        <?php if ($pagina > 1): ?>
-            <a href="equipos.php?<?php echo htmlspecialchars(http_build_query([
-                'buscar' => $buscar,
-                'por_pagina' => $porPagina,
-                'pagina' => $pagina - 1
-            ]), ENT_QUOTES, 'UTF-8'); ?>">
-                Anterior
-            </a>
-        <?php endif; ?>
+            <span>Pagina <?php echo $pagina; ?> de <?php echo $totalPaginas; ?> (<?php echo $totalEquipos; ?> equipos)</span>
 
-        <?php if ($pagina < $totalPaginas): ?>
-            <a href="equipos.php?<?php echo htmlspecialchars(http_build_query([
-                'buscar' => $buscar,
-                'por_pagina' => $porPagina,
-                'pagina' => $pagina + 1
-            ]), ENT_QUOTES, 'UTF-8'); ?>">
-                Siguiente
-            </a>
-        <?php endif; ?>
-        <p><a href="dashboard.php">Volver al menu principal</a></p>
-    </body>
-</html>
+            <?php if ($pagina < $totalPaginas): ?>
+                <a class="boton boton-secundario" href="equipos.php?<?php echo htmlspecialchars(http_build_query([
+                    'buscar' => $buscar,
+                    'por_pagina' => $porPagina,
+                    'pagina' => $pagina + 1
+                ]), ENT_QUOTES, 'UTF-8'); ?>">Siguiente</a>
+            <?php endif; ?>
+        </div>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

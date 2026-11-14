@@ -18,74 +18,65 @@ $nombre = htmlspecialchars(
 );
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Panel principal - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Panel principal';
+require __DIR__ . '/../../includes/header.php';
+?>
 
-        <h1>Panel principal de SIGEL</h1>
-        <p>Bienvenido, <?php echo $nombre; ?></p>
+        <h1>Bienvenido, <?php echo $nombre; ?></h1>
+        <p>Seleccione una opcion para comenzar.</p>
 
-        <h2>Menu principal</h2>
+        <!-- Opciones segun los permisos del usuario -->
+        <div class="tarjetas">
+            <?php if (tienePermiso('ver_usuarios')): ?>
+                <a class="tarjeta" href="usuarios.php">
+                    <strong>Usuarios</strong>
+                    <span>Registrar y administrar usuarios</span>
+                </a>
+            <?php endif; ?>
 
-        <!-- Opciones del administrador -->
-        <!-- Gestion de usuarios -->
-        <?php if (tienePermiso('ver_usuarios')): ?>
-            <p><a href="usuarios.php">Gestionar usuarios</a></p>
-        <?php endif; ?>
+            <?php if (tienePermiso('ver_categorias')): ?>
+                <a class="tarjeta" href="categorias.php">
+                    <strong>Categorias</strong>
+                    <span>Clasificar los equipos</span>
+                </a>
+            <?php endif; ?>
 
-        <!-- Gestion de categorias -->
-        <?php if (tienePermiso('ver_categorias')): ?>
-            <p><a href="categorias.php">Gestionar categorias</a></p>
-        <?php endif; ?>
+            <?php if (tienePermiso('ver_equipos')): ?>
+                <a class="tarjeta" href="equipos.php">
+                    <strong>Equipos</strong>
+                    <span>Consultar el inventario</span>
+                </a>
+            <?php endif; ?>
 
-        <!-- Consulta de equipos -->
-        <?php if (tienePermiso('ver_equipos')): ?>
-            <p><a href="equipos.php">Consultar equipos</a></p>
-        <?php endif; ?>
+            <?php if (tienePermiso('ver_usuarios')): ?>
+                <a class="tarjeta" href="profesores.php">
+                    <strong>Profesores</strong>
+                    <span>Profesores que reciben prestamos</span>
+                </a>
+            <?php endif; ?>
 
-        <!-- Reportes de prestamos -->
-        <?php if (tienePermiso('ver_reportes')): ?>
-            <p>
-                <a href="reportes.php">Reportes de prestamos</a>
-            </p>
-        <?php endif; ?>
+            <?php if (tienePermiso('ver_prestamos')): ?>
+                <a class="tarjeta" href="prestamos.php">
+                    <strong>Prestamos</strong>
+                    <span>Gestionar las solicitudes</span>
+                </a>
+            <?php endif; ?>
 
-        <!-- Gestion de prestamos -->
-        <?php if (tienePermiso('ver_prestamos')): ?>
-            <p><a href="prestamos.php">Gestionar prestamos</a></p>
-        <?php endif; ?>
+            <?php if (tienePermiso('crear_prestamo')): ?>
+                <a class="tarjeta" href="crear_prestamo.php">
+                    <strong>Nuevo prestamo</strong>
+                    <span>Registrar una solicitud</span>
+                </a>
+            <?php endif; ?>
 
-        <!-- Registro de prestamos -->
-        <?php if (tienePermiso('crear_prestamo')): ?>
-            <p>
-                <a href="crear_prestamo.php">Registrar prestamo</a>
-            </p>
-        <?php endif; ?>
+            <?php if (tienePermiso('ver_reportes')): ?>
+                <a class="tarjeta" href="reportes.php">
+                    <strong>Reportes</strong>
+                    <span>Equipos mas prestados</span>
+                </a>
+            <?php endif; ?>
 
-        <!-- Gestion de profesores -->
-        <?php if (tienePermiso('ver_usuarios')): ?>
-            <p>
-                <a href="profesores.php">Gestion de profesores</a>
-            </p>
-        <?php endif; ?>
+        </div>
 
-        <!-- Cerrar sesion -->
-        <form action="../actions/logout.php" method="POST">
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="<?php echo htmlspecialchars(
-                    $_SESSION['csrf_token'],
-                    ENT_QUOTES | ENT_SUBSTITUTE,
-                    'UTF-8'
-                ); ?>"
-            >
-            <button type="submit">Cerrar sesion</button>
-        </form>
-    </body>
-</html>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

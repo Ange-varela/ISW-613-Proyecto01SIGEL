@@ -101,48 +101,48 @@ $consulta->execute();
 $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Usuarios - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Usuarios';
+require __DIR__ . '/../../includes/header.php';
+?>
 
-        <h1>Gestion de usuarios</h1>
+        <h1>Usuarios</h1>
         
         <!-- Mostrar mensajes del sistema -->
         <?php if (($_GET['guardado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Usuario registrado correctamente.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['actualizado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Usuario actualizado correctamente.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['eliminado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Usuario desactivado correctamente.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p style="color: red;">
+            <p class="mensaje error">
                 No se pudo completar la operacion. Verifique los datos.
             </p>
         <?php endif; ?>
  
         
-        <h2>Registrar usuario</h2>
-
-        <!-- Formulario para registrar usuarios -->
+        <!-- Formulario para registrar usuarios (se abre con el boton) -->
         <?php if (tienePermiso('crear_usuario')): ?>
-            <form action="../actions/guardar_usuario.php" method="POST">
+            <details class="agregar">
+                <summary class="boton">
+                <span class="abrir">+ Agregar usuario</span>
+                <span class="cerrar">Cancelar y volver a la lista</span>
+            </summary>
+
+            <form class="panel" action="../actions/guardar_usuario.php" method="POST">
 
                 <input type="hidden" name="csrf_token"
                     value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -181,34 +181,22 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <button type="submit">Guardar usuario</button>
 
             </form>
+            </details>
         <?php endif; ?>
-        <hr>
-        <h2>Lista de usuarios</h2>
 
-        <!-- Buscar usuarios -->
-        <form method="GET" action="usuarios.php">
-            <label for="buscar">Buscar usuario:</label>
-
+        <!-- Buscar y cantidad por pagina -->
+        <form class="barra" method="GET" action="usuarios.php">
             <input type="text" id="buscar" name="buscar"
-                maxlength="150"
+                maxlength="150" placeholder="Buscar por nombre o correo..."
                 value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-            <input type="hidden" name="por_pagina"
-                value="<?php echo $porPagina; ?>">
+
             <button type="submit">Buscar</button>
+            <a class="boton boton-secundario" href="usuarios.php">Limpiar</a>
 
-            <a href="usuarios.php">Limpiar</a>
-        </form>
+            <span class="separar"></span>
 
-        <br>
-
-        <!-- Seleccionar registros por pagina -->
-        <form method="GET" action="usuarios.php">
-            <input type="hidden" name="buscar"
-                value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-
-            <label for="por_pagina">Registros por pagina:</label>
-
-            <select name="por_pagina" id="por_pagina">
+            <label for="por_pagina">Por pagina:</label>
+            <select name="por_pagina" id="por_pagina" onchange="this.form.submit()">
                 <?php foreach ($opciones as $cantidad): ?>
                     <option value="<?php echo $cantidad; ?>"
                         <?php echo $porPagina === $cantidad ? 'selected' : ''; ?>>
@@ -216,14 +204,10 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                     </option>
                 <?php endforeach; ?>
             </select>
-
-            <button type="submit">Mostrar</button>
         </form>
 
-        <br>
-
         <!-- Mostrar los usuarios -->
-        <table border="1" cellpadding="8">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -288,31 +272,23 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </table>
 
         <!-- Navegacion entre paginas -->
-        <p>
-            Pagina <?php echo $pagina; ?>
-            de <?php echo $totalPaginas; ?>
-        </p>
+        <div class="paginacion">
+            <?php if ($pagina > 1): ?>
+                <a class="boton boton-secundario" href="?<?php echo htmlspecialchars(http_build_query([
+                    'buscar' => $buscar,
+                    'por_pagina' => $porPagina,
+                    'pagina' => $pagina - 1
+                ]), ENT_QUOTES, 'UTF-8'); ?>">Anterior</a>
+            <?php endif; ?>
 
-        <?php if ($pagina > 1): ?>
-            <a href="?<?php echo htmlspecialchars(http_build_query([
-                'buscar' => $buscar,
-                'por_pagina' => $porPagina,
-                'pagina' => $pagina - 1
-            ]), ENT_QUOTES, 'UTF-8'); ?>">
-                Anterior
-            </a>
-        <?php endif; ?>
+            <span>Pagina <?php echo $pagina; ?> de <?php echo $totalPaginas; ?></span>
 
-        <?php if ($pagina < $totalPaginas): ?>
-            <a href="?<?php echo htmlspecialchars(http_build_query([
-                'buscar' => $buscar,
-                'por_pagina' => $porPagina,
-                'pagina' => $pagina + 1
-            ]), ENT_QUOTES, 'UTF-8'); ?>">
-                Siguiente
-            </a>
-        <?php endif; ?>
-        <hr>
-        <p><a href="dashboard.php">Volver al menu principal</a></p>
-    </body>
-</html>
+            <?php if ($pagina < $totalPaginas): ?>
+                <a class="boton boton-secundario" href="?<?php echo htmlspecialchars(http_build_query([
+                    'buscar' => $buscar,
+                    'por_pagina' => $porPagina,
+                    'pagina' => $pagina + 1
+                ]), ENT_QUOTES, 'UTF-8'); ?>">Siguiente</a>
+            <?php endif; ?>
+        </div>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

@@ -46,26 +46,22 @@ $consultaImagenes->execute(['equipo_id' => $id]);
 $imagenes = $consultaImagenes->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Imagenes de equipos - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Imagenes de equipos';
+require __DIR__ . '/../../includes/header.php';
+?>
 
         <h1>Imagenes del equipo</h1>
 
         <!-- Mostrar mensajes del sistema -->
         <?php if (($_GET['guardado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Imagenes guardadas correctamente.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p style="color: red;">
+            <p class="mensaje error">
                 No se pudieron guardar las imagenes.
             </p>
         <?php endif; ?>
@@ -127,6 +123,5 @@ $imagenes = $consultaImagenes->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-        <p><a href="equipos.php">Volver a equipos</a></p>
-    </body>
-</html>
+        <p><a class="boton boton-secundario" href="equipos.php">Volver a equipos</a></p>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

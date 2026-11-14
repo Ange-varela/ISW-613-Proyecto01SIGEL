@@ -99,33 +99,29 @@ switch ($prestamo['estado']) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Gestionar prestamo - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Gestionar prestamo';
+require __DIR__ . '/../../includes/header.php';
+?>
         <?php if (($_GET['actualizado'] ?? '') === '1'): ?>
-            <p style="color: green;">Estado actualizado correctamente.</p>
+            <p class="mensaje exito">Estado actualizado correctamente.</p>
         <?php endif; ?>
 
         <!-- Mensajes de entrega -->
         <?php if (($_GET['entregado'] ?? '') === '1'): ?>
-            <p style="color: green;">
+            <p class="mensaje exito">
                 Entrega registrada correctamente.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['error_entrega'] ?? '') === '1'): ?>
-            <p style="color: red;">
+            <p class="mensaje error">
                 No se pudo registrar la entrega. Verifique el codigo de retiro.
             </p>
         <?php endif; ?>
 
         <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p style="color: red;">No se pudo cambiar el estado del prestamo.</p>
+            <p class="mensaje error">No se pudo cambiar el estado del prestamo.</p>
         <?php endif; ?>
 
         <h1>Gestionar prestamo #<?php echo (int)$prestamo['id']; ?></h1>
@@ -237,6 +233,5 @@ switch ($prestamo['estado']) {
                 <br>
             <?php endforeach; ?>
         <?php endif; ?>
-        <p><a href="prestamos.php">Volver a prestamos</a></p>
-    </body>
-</html>
+        <p><a class="boton boton-secundario" href="prestamos.php">Volver a prestamos</a></p>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

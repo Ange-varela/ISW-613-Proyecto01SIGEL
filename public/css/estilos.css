@@ -1,0 +1,446 @@
+/* Colores del sistema: cambiar aqui para cambiar toda la pagina */
+:root {
+    --color-principal: #1e3a5f;
+    --color-principal-oscuro: #0f2540;
+    --color-suave: #e3eaf3;
+    --color-fondo: #f5f7fa;
+    --color-texto: #2e2a35;
+    --color-borde: #dde3ea;
+    --color-error: #dc2626;
+    --color-exito: #16a34a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+/* Menu superior */
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 32px;
+    background: var(--color-principal);
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+}
+
+.menu .marca {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.menu .opciones {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+}
+
+.menu .opciones a {
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+.menu .opciones a:hover,
+.menu .opciones a.activo {
+    background: var(--color-principal-oscuro);
+}
+
+.menu .usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+}
+
+.menu form {
+    margin: 0;
+}
+
+.boton-salir {
+    background: white;
+    color: var(--color-principal);
+}
+
+/* Contenido de cada pagina */
+.contenido {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 24px 32px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+h1 {
+    color: var(--color-principal-oscuro);
+    margin-top: 0;
+}
+
+h2 {
+    color: var(--color-principal);
+    font-size: 20px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--color-borde);
+    margin: 24px 0;
+}
+
+/* Formularios */
+label {
+    display: inline-block;
+    min-width: 110px;
+    font-weight: 600;
+    vertical-align: top;
+    padding-top: 8px;
+}
+
+input,
+select,
+textarea {
+    padding: 8px 10px;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--color-suave);
+    border-color: var(--color-principal);
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-principal);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--color-principal-oscuro);
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+
+th {
+    background: var(--color-suave);
+    color: var(--color-principal-oscuro);
+    text-align: left;
+}
+
+th,
+td {
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+/* Botones de eliminar en rojo */
+form[action*="eliminar"] button {
+    background: var(--color-error);
+}
+
+form[action*="eliminar"] {
+    display: inline;
+}
+
+tr:hover td {
+    background: var(--color-fondo);
+}
+
+a {
+    color: var(--color-principal);
+}
+
+/* Enlaces con forma de boton */
+.boton {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--color-principal);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.boton:hover {
+    background: var(--color-principal-oscuro);
+}
+
+.boton-secundario {
+    background: var(--color-suave);
+    color: var(--color-principal-oscuro);
+}
+
+.boton-secundario:hover {
+    background: var(--color-borde);
+}
+
+.boton-editar {
+    background: var(--color-suave);
+    color: var(--color-principal-oscuro);
+}
+
+/* Titulo de la pagina */
+.encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Boton que abre el formulario de agregar */
+.agregar {
+    margin-bottom: 20px;
+}
+
+.agregar summary {
+    list-style: none;
+}
+
+.agregar summary::-webkit-details-marker {
+    display: none;
+}
+
+.agregar .panel {
+    margin-top: 12px;
+    padding: 20px;
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+}
+
+/* Barra de busqueda */
+.barra {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.barra label {
+    min-width: auto;
+}
+
+.barra .separar {
+    flex: 1;
+}
+
+/* Paginacion */
+.paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* Botones de la columna de acciones */
+td .boton,
+td form {
+    margin-right: 6px;
+}
+
+/* Mensajes de exito y error */
+.mensaje {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.mensaje.exito {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.mensaje.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Enlaces de la columna de acciones con forma de boton */
+td a {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 2px 4px 2px 0;
+    border-radius: 8px;
+    background: var(--color-suave);
+    color: var(--color-principal-oscuro);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+td a:hover {
+    background: var(--color-borde);
+}
+
+/* Equipos consultados recientemente */
+.recientes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+}
+
+.recientes a {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid var(--color-borde);
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+/* Tarjetas del panel principal */
+.tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px;
+    border: 1px solid var(--color-borde);
+    border-left: 5px solid var(--color-principal);
+    border-radius: 12px;
+    background: white;
+    color: var(--color-texto);
+    text-decoration: none;
+}
+
+.tarjeta strong {
+    color: var(--color-principal);
+    font-size: 18px;
+}
+
+.tarjeta span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.tarjeta:hover {
+    background: var(--color-fondo);
+}
+
+/* Pagina de inicio de sesion */
+.pagina-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.caja-login {
+    width: 380px;
+    padding: 32px;
+    background: white;
+    border-radius: 12px;
+    border-top: 6px solid var(--color-principal);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.caja-login h1 {
+    margin-bottom: 4px;
+}
+
+.caja-login .subtitulo {
+    margin-top: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.caja-login label {
+    display: block;
+    padding-top: 12px;
+}
+
+.caja-login input[type="email"],
+.caja-login input[type="password"] {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.caja-login .recordarme {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0;
+    font-weight: normal;
+}
+
+.caja-login button {
+    width: 100%;
+    padding: 10px;
+}
+
+/* Mantener los botones de acciones en una sola linea */
+td:last-child {
+    white-space: nowrap;
+}
+
+/* Pie de pagina */
+.pie {
+    text-align: center;
+    padding: 16px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Al abrir el formulario de agregar, ocultar todo lo que viene despues */
+.agregar[open] ~ * {
+    display: none;
+}
+
+/* Cambiar el texto del boton segun este abierto o cerrado */
+.agregar .cerrar,
+.agregar[open] .abrir {
+    display: none;
+}
+
+.agregar[open] .cerrar {
+    display: inline;
+}
+
+.agregar[open] summary {
+    background: var(--color-suave);
+    color: var(--color-principal-oscuro);
+}
+
+/* Colores al pasar el mouse por los botones claros */
+.boton-editar:hover {
+    background: var(--color-borde);
+    color: var(--color-principal-oscuro);
+}
+
+.boton-salir:hover {
+    background: var(--color-suave);
+    color: var(--color-principal-oscuro);
+}

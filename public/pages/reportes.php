@@ -81,14 +81,10 @@ if ($error === '') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Reportes - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Reportes';
+require __DIR__ . '/../../includes/header.php';
+?>
 
         <h1>Reporte de equipos mas prestados</h1>
 
@@ -124,14 +120,14 @@ if ($error === '') {
 
 
         <?php if ($error !== ''): ?>
-            <p style="color: red;">
+            <p class="mensaje error">
                 <?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
             </p>
         <?php else: ?>
 
             <h2>Resultados</h2>
 
-            <table border="1" cellpadding="8">
+            <table>
                 <thead>
                     <tr>
                         <th>Codigo</th>
@@ -163,6 +159,4 @@ if ($error === '') {
                 </tbody>
             </table>
         <?php endif; ?>
-        <p><a href="dashboard.php">Volver al menu principal</a></p>
-    </body>
-</html>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

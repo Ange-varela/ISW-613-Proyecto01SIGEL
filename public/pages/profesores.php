@@ -43,30 +43,30 @@ $consulta->execute([
 $profesores = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Profesores - SIGEL</title>
-    </head>
-    <body>
+<?php
+$titulo = 'Profesores';
+require __DIR__ . '/../../includes/header.php';
+?>
 
-        <h1>Gestion de profesores</h1>
+        <h1>Profesores</h1>
         
         <!-- Mostrar mensajes del sistema -->
         <?php if (($_GET['guardado'] ?? '') === '1'): ?>
-            <p style="color: green;">Profesor registrado correctamente.</p>
+            <p class="mensaje exito">Profesor registrado correctamente.</p>
         <?php endif; ?>
 
         <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p style="color: red;">No se pudo registrar el profesor.</p>
+            <p class="mensaje error">No se pudo registrar el profesor.</p>
         <?php endif; ?>
 
-        <h2>Registrar profesor</h2>
+        <!-- Formulario para registrar profesores (se abre con el boton) -->
+        <details class="agregar">
+            <summary class="boton">
+                <span class="abrir">+ Agregar profesor</span>
+                <span class="cerrar">Cancelar y volver a la lista</span>
+            </summary>
 
-        <!-- Formulario para registrar profesores -->
-        <form action="../actions/guardar_profesor.php" method="POST">
+        <form class="panel" action="../actions/guardar_profesor.php" method="POST">
 
             <input type="hidden" name="csrf_token"
                 value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -85,30 +85,23 @@ $profesores = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
             <button type="submit">Guardar profesor</button>
         </form>
-
-        <hr>
-
-
-        <h2>Lista de profesores</h2>
+        </details>
 
         <!-- Buscar profesores -->
-        <form method="GET" action="profesores.php">
-
-            <label for="buscar">Buscar profesor:</label>
-
+        <form class="barra" method="GET" action="profesores.php">
             <input type="text" id="buscar" name="buscar"
-                maxlength="150"
+                maxlength="150" placeholder="Buscar por nombre o correo..."
                 value="<?php echo htmlspecialchars($buscar, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 
             <button type="submit">Buscar</button>
-            <a href="profesores.php">Limpiar</a>
+            <a class="boton boton-secundario" href="profesores.php">Limpiar</a>
 
         </form>
 
         <br>
 
         <!-- Mostrar los profesores -->
-        <table border="1" cellpadding="8">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -136,6 +129,4 @@ $profesores = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </tbody>
         </table>
-        <p><a href="dashboard.php">Volver al menu principal</a></p>
-    </body>
-</html>
+<?php require __DIR__ . '/../../includes/footer.php'; ?>

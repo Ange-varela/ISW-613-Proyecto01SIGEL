@@ -20,14 +20,16 @@ if (empty($_SESSION['csrf_token'])) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Iniciar sesion - SIGEL</title>
+        <link rel="stylesheet" href="/css/estilos.css">
     </head>
-    <body>
+    <body class="pagina-login">
 
+        <div class="caja-login">
         <h1>SIGEL</h1>
-        <h2>Iniciar sesion</h2>
+        <p class="subtitulo">Sistema de Gestion de Prestamo de Equipos de Laboratorio</p>
 
         <?php if (isset($_GET['error'])): ?>
-            <p>Credenciales invalidas o acceso no permitido.</p>
+            <p class="mensaje error">Credenciales invalidas o acceso no permitido.</p>
         <?php endif; ?>
 
         <!-- Formulario de inicio de sesion -->
@@ -36,21 +38,20 @@ if (empty($_SESSION['csrf_token'])) {
             <input type="hidden" name="csrf_token"
                 value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
 
-            <label for="correo">Correo electronico:</label>
+            <label for="correo">Correo electronico</label>
             <input type="email" id="correo" name="correo" required>
-            <br><br>
-            <label for="contrasena">Contrasena:</label>
+
+            <label for="contrasena">Contrasena</label>
             <input type="password" id="contrasena" name="contrasena" required>
-            <br><br>
+
             <!-- Mantener la sesion iniciada -->
-            <p>
-                <label>
-                    <input type="checkbox" name="recordarme" value="1">
-                    Recordarme
-                </label>
-            </p>
+            <label class="recordarme">
+                <input type="checkbox" name="recordarme" value="1">
+                Recordarme
+            </label>
 
             <button type="submit">Ingresar</button>
         </form>
+        </div>
     </body>
 </html>
