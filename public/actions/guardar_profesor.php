@@ -6,23 +6,8 @@ require_once __DIR__ . '/../../includes/auth.php';
 // Verificar la sesion y permiso
 verificarPermiso('crear_usuario');
 
-// Permitir solo peticiones POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    exit('Metodo no permitido');
-}
-
-// Validar el token CSRF
-$token = $_POST['csrf_token'] ?? '';
-
-if (
-    !is_string($token) ||
-    empty($_SESSION['csrf_token']) ||
-    !hash_equals($_SESSION['csrf_token'], $token)
-) {
-    http_response_code(403);
-    exit('Solicitud no valida');
-}
+// Validar que sea POST y que el token CSRF sea correcto
+validarFormulario();
 
 // Obtener los datos
 $nombre = $_POST['nombre'] ?? '';
