@@ -133,7 +133,7 @@ require __DIR__ . '/../../includes/header.php';
 
                 <label for="contrasena">Contrasena:</label>
                 <input type="password" id="contrasena" name="contrasena"
-                    minlength="8" maxlength="72" required>
+                    minlength="<?php echo CONTRASENA_MIN; ?>" maxlength="<?php echo CONTRASENA_MAX; ?>" required>
 
                 <br><br>
 

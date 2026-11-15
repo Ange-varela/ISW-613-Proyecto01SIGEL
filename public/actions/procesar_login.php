@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Validar el token CSRF
 $token = $_POST['csrf_token'] ?? '';
-
 if (
     empty($_SESSION['csrf_token']) ||
     !is_string($token) ||
@@ -54,7 +53,7 @@ try {
     if (
         !$usuario ||
         !$usuario['activo'] ||
-        $usuario['intentos_fallidos'] >= 3 ||
+        $usuario['intentos_fallidos'] >= MAX_INTENTOS ||
         !password_verify($contrasena, $usuario['password_hash'])
     ) {
         // Registrar un intento fallido
@@ -62,9 +61,12 @@ try {
             $actualizar = $pdo->prepare(
                 "UPDATE usuarios
                  SET intentos_fallidos = intentos_fallidos + 1
-                 WHERE id = :id AND intentos_fallidos < 3"
+                 WHERE id = :id AND intentos_fallidos < :maximo"
             );
-            $actualizar->execute(['id' => $usuario['id']]);
+            $actualizar->execute([
+                'id' => $usuario['id'],
+                'maximo' => MAX_INTENTOS
+            ]);
         }
 
         header('Location: ../login.php?error=1');

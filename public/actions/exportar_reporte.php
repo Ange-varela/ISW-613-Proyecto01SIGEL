@@ -16,14 +16,6 @@ if (!is_string($desde) || !is_string($hasta)) {
     exit('Fechas no validas');
 }
 
-// Validar una fecha
-function fechaValida($fecha)
-{
-    $valor = DateTimeImmutable::createFromFormat('!Y-m-d', $fecha);
-
-    return $valor && $valor->format('Y-m-d') === $fecha;
-}
-
 // Revisar los filtros
 if (
     ($desde !== '' && !fechaValida($desde)) ||

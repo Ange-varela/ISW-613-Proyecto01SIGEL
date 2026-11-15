@@ -31,12 +31,9 @@ $correo = trim($correo);
 
 // Validar los campos
 if (
-    $nombre === '' ||
-    mb_strlen($nombre) > 100 ||
-    !filter_var($correo, FILTER_VALIDATE_EMAIL) ||
-    strlen($correo) > 150 ||
-    strlen($contrasena) < 8 ||
-    strlen($contrasena) > 72 ||
+    !textoValido($nombre, 100) ||
+    !correoValido($correo) ||
+    !contrasenaValida($contrasena) ||
     !$rolId ||
     $rolId < 1
 ) {

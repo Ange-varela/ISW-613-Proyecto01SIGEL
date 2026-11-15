@@ -19,14 +19,6 @@ if (!is_string($hasta)) {
     $hasta = '';
 }
 
-// Validar las fechas
-function fechaValida($fecha)
-{
-    $valor = DateTimeImmutable::createFromFormat('!Y-m-d', $fecha);
-
-    return $valor && $valor->format('Y-m-d') === $fecha;
-}
-
 $error = '';
 
 if ($desde !== '' && !fechaValida($desde)) {
