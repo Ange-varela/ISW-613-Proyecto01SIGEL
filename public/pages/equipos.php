@@ -28,43 +28,11 @@ $buscar = $_GET['buscar'] ?? '';
 if (!is_string($buscar)) {
     $buscar = '';
 }
-
 $buscar = mb_substr(trim($buscar), 0, 100);
 
-
- // Obtener la cantidad por pagina
-$opciones = [5, 10, 20];
-
-$porPagina = filter_input(INPUT_GET, 'por_pagina', FILTER_VALIDATE_INT);
-
-if (!in_array($porPagina, $opciones, true)) {
-    $porPagina = filter_var(
-        $_COOKIE['equipos_por_pagina'] ?? null,
-        FILTER_VALIDATE_INT
-    );
-}
-
-// Usar 10 registros si no hay una preferencia valida
-if (!in_array($porPagina, $opciones, true)) {
-    $porPagina = 10;
-}
-
-// Guardar la preferencia
-setcookie('equipos_por_pagina', (string)$porPagina, [
-    'expires' => time() + 30 * 24 * 60 * 60,
-    'path' => '/',
-    'secure' => !empty($_SERVER['HTTPS']) &&
-                $_SERVER['HTTPS'] !== 'off',
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-
-// Obtener la pagina actual
-$pagina = filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT);
-
-if (!$pagina || $pagina < 1) {
-    $pagina = 1;
-}
+// Obtener la cantidad por pagina y la pagina actual
+$porPagina = obtenerPorPagina('equipos_por_pagina');
+$pagina = obtenerPagina();
 
 // Preparar el filtro de busqueda
 $filtro = '%' . $buscar . '%';
@@ -81,16 +49,13 @@ $consultaTotal->execute([
     'nombre' => $filtro,
     'codigo' => $filtro
 ]);
-
 $totalEquipos = (int)$consultaTotal->fetchColumn();
 
 // Calcular las paginas
-$totalPaginas = max(1, (int)ceil($totalEquipos / $porPagina));
-
+$totalPaginas = contarPaginas($totalEquipos, $porPagina);
 if ($pagina > $totalPaginas) {
     $pagina = $totalPaginas;
 }
-
 $inicio = ($pagina - 1) * $porPagina;
 
 // Consultar los equipos por pagina
@@ -256,7 +221,7 @@ require __DIR__ . '/../../includes/header.php';
 
             <label for="por_pagina">Por pagina:</label>
             <select name="por_pagina" id="por_pagina" onchange="this.form.submit()">
-                <?php foreach ($opciones as $cantidad): ?>
+                <?php foreach (OPCIONES_POR_PAGINA as $cantidad): ?>
                     <option value="<?php echo $cantidad; ?>"
                         <?php echo $porPagina === $cantidad ? 'selected' : ''; ?>>
                         <?php echo $cantidad; ?>

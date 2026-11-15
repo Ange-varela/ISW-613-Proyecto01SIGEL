@@ -17,40 +17,11 @@ $buscar = $_GET['buscar'] ?? '';
 if (!is_string($buscar)) {
     $buscar = '';
 }
-
 $buscar = mb_substr(trim($buscar), 0, 100);
 
-// Cantidad de registros permitidos
-$opciones = [5, 10, 20];
-
-// Obtener la cantidad por pagina
-$porPagina = filter_var(
-    $_GET['por_pagina'] ?? $_COOKIE['categorias_por_pagina'] ?? 10,
-    FILTER_VALIDATE_INT
-);
-
-// Usar 10 registros si no hay una preferencia valida
-if (!in_array($porPagina, $opciones, true)) {
-    $porPagina = 10;
-}
-
-// Guardar la preferencia en una cookie
-setcookie('categorias_por_pagina', (string)$porPagina, [
-    'expires' => time() + 60 * 60 * 24 * 30,
-    'path' => '/',
-    'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-    'samesite' => 'Lax'
-]);
-
-// Obtener la pagina actual
-$pagina = filter_var(
-    $_GET['pagina'] ?? 1,
-    FILTER_VALIDATE_INT
-);
-
-if ($pagina === false || $pagina < 1) {
-    $pagina = 1;
-}
+// Obtener la cantidad por pagina y la pagina actual
+$porPagina = obtenerPorPagina('categorias_por_pagina');
+$pagina = obtenerPagina();
 
 // Contar las categorias encontradas
 $conteo = $pdo->prepare(
@@ -65,7 +36,7 @@ $conteo->execute([
 $total = (int) $conteo->fetchColumn();
 
 // Calcular las paginas
-$totalPaginas = max(1, (int) ceil($total / $porPagina));
+$totalPaginas = contarPaginas($total, $porPagina);
 $pagina = min($pagina, $totalPaginas);
 $inicio = ($pagina - 1) * $porPagina;
 
@@ -89,7 +60,6 @@ $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
 $titulo = 'Categorias';
 require __DIR__ . '/../../includes/header.php';
 ?>
-
         <!-- Titulo y boton para agregar -->
         <div class="encabezado">
             <h1>Categorias</h1>
@@ -137,7 +107,7 @@ require __DIR__ . '/../../includes/header.php';
 
             <label for="por_pagina">Por pagina:</label>
             <select name="por_pagina" id="por_pagina" onchange="this.form.submit()">
-                <?php foreach ($opciones as $cantidad): ?>
+                <?php foreach (OPCIONES_POR_PAGINA as $cantidad): ?>
                     <option value="<?php echo $cantidad; ?>"
                         <?php echo $porPagina === $cantidad ? 'selected' : ''; ?>>
                         <?php echo $cantidad; ?>
