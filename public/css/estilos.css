@@ -346,10 +346,6 @@ td a:hover {
     font-size: 14px;
 }
 
-.tarjeta:hover {
-    background: var(--color-fondo);
-}
-
 /* Pagina de inicio de sesion */
 .pagina-login {
     display: flex;

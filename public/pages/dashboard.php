@@ -24,57 +24,57 @@ require __DIR__ . '/../../includes/header.php';
 ?>
 
         <h1>Bienvenido, <?php echo $nombre; ?></h1>
-        <p>Seleccione una opcion para comenzar.</p>
+        <p>Estas son las opciones que tiene disponibles. Use el menu de arriba para moverse.</p>
 
         <!-- Opciones segun los permisos del usuario -->
         <div class="tarjetas">
             <?php if (tienePermiso('ver_usuarios')): ?>
-                <a class="tarjeta" href="usuarios.php">
+                <div class="tarjeta">
                     <strong>Usuarios</strong>
                     <span>Registrar y administrar usuarios</span>
-                </a>
+                </div>
             <?php endif; ?>
 
             <?php if (tienePermiso('ver_categorias')): ?>
-                <a class="tarjeta" href="categorias.php">
+                <div class="tarjeta">
                     <strong>Categorias</strong>
                     <span>Clasificar los equipos</span>
-                </a>
+                </div>
             <?php endif; ?>
 
             <?php if (tienePermiso('ver_equipos')): ?>
-                <a class="tarjeta" href="equipos.php">
+                <div class="tarjeta">
                     <strong>Equipos</strong>
                     <span>Consultar el inventario</span>
-                </a>
+                </div>
             <?php endif; ?>
 
             <?php if (tienePermiso('ver_usuarios')): ?>
-                <a class="tarjeta" href="profesores.php">
+                <div class="tarjeta">
                     <strong>Profesores</strong>
                     <span>Profesores que reciben prestamos</span>
-                </a>
+                </div>
             <?php endif; ?>
 
             <?php if (tienePermiso('ver_prestamos')): ?>
-                <a class="tarjeta" href="prestamos.php">
+                <div class="tarjeta">
                     <strong>Prestamos</strong>
                     <span>Gestionar las solicitudes</span>
-                </a>
+                </div>
             <?php endif; ?>
 
             <?php if (tienePermiso('crear_prestamo')): ?>
-                <a class="tarjeta" href="crear_prestamo.php">
+                <div class="tarjeta">
                     <strong>Nuevo prestamo</strong>
                     <span>Registrar una solicitud</span>
-                </a>
+                </div>
             <?php endif; ?>
 
             <?php if (tienePermiso('ver_reportes')): ?>
-                <a class="tarjeta" href="reportes.php">
+                <div class="tarjeta">
                     <strong>Reportes</strong>
                     <span>Equipos mas prestados</span>
-                </a>
+                </div>
             <?php endif; ?>
 
         </div>
