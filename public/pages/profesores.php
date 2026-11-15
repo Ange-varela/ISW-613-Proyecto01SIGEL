@@ -47,18 +47,7 @@ $profesores = $consulta->fetchAll(PDO::FETCH_ASSOC);
 $titulo = 'Profesores';
 require __DIR__ . '/../../includes/header.php';
 ?>
-
         <h1>Profesores</h1>
-        
-        <!-- Mostrar mensajes del sistema -->
-        <?php if (($_GET['guardado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">Profesor registrado correctamente.</p>
-        <?php endif; ?>
-
-        <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p class="mensaje error">No se pudo registrar el profesor.</p>
-        <?php endif; ?>
-
         <!-- Formulario para registrar profesores (se abre con el boton) -->
         <details class="agregar">
             <summary class="boton">

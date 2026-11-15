@@ -103,27 +103,6 @@ switch ($prestamo['estado']) {
 $titulo = 'Gestionar prestamo';
 require __DIR__ . '/../../includes/header.php';
 ?>
-        <?php if (($_GET['actualizado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">Estado actualizado correctamente.</p>
-        <?php endif; ?>
-
-        <!-- Mensajes de entrega -->
-        <?php if (($_GET['entregado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">
-                Entrega registrada correctamente.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['error_entrega'] ?? '') === '1'): ?>
-            <p class="mensaje error">
-                No se pudo registrar la entrega. Verifique el codigo de retiro.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p class="mensaje error">No se pudo cambiar el estado del prestamo.</p>
-        <?php endif; ?>
-
         <h1>Gestionar prestamo #<?php echo (int)$prestamo['id']; ?></h1>
 
         <p>

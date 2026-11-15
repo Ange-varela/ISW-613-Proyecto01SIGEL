@@ -105,35 +105,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 $titulo = 'Usuarios';
 require __DIR__ . '/../../includes/header.php';
 ?>
-
         <h1>Usuarios</h1>
-        
-        <!-- Mostrar mensajes del sistema -->
-        <?php if (($_GET['guardado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">
-                Usuario registrado correctamente.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['actualizado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">
-                Usuario actualizado correctamente.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['eliminado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">
-                Usuario desactivado correctamente.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p class="mensaje error">
-                No se pudo completar la operacion. Verifique los datos.
-            </p>
-        <?php endif; ?>
- 
-        
         <!-- Formulario para registrar usuarios (se abre con el boton) -->
         <?php if (tienePermiso('crear_usuario')): ?>
             <details class="agregar">

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/mensajes.php';
 // Iniciar la sesion con una cookie segura
 function iniciarSesion() {
     if (session_status() === PHP_SESSION_NONE) {

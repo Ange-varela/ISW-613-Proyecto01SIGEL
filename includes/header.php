@@ -57,3 +57,5 @@ function claseMenu($pagina, $paginaActual) {
         </nav>
 
         <main class="contenido">
+            <?php mostrarMensajes(); ?>
+

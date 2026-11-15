@@ -119,35 +119,7 @@ $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 $titulo = 'Equipos';
 require __DIR__ . '/../../includes/header.php';
 ?>
-
         <h1>Equipos</h1>
-        <!-- Mostrar mensajes del sistema -->
-        <?php if (($_GET['guardado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">
-                Equipo registrado correctamente.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['actualizado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">
-                Equipo actualizado correctamente.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['error'] ?? '') === '1'): ?>
-            <p class="mensaje error">
-                No se pudo completar la operacion. Verifique los datos.
-            </p>
-        <?php endif; ?>
-
-        <?php if (($_GET['eliminado'] ?? '') === '1'): ?>
-            <p class="mensaje exito">
-                Equipo eliminado correctamente.
-            </p>
-        <?php endif; ?>
-
-        
-        
         <!-- Formulario para registrar equipos (se abre con el boton) -->
         <?php if (tienePermiso('crear_equipo')): ?>
             <details class="agregar">
