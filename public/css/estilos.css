@@ -440,3 +440,14 @@ td:last-child {
     background: var(--color-suave);
     color: var(--color-principal-oscuro);
 }
+
+/* Etiqueta para los equipos consultados recientemente */
+.etiqueta {
+    margin-left: 6px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--color-suave);
+    color: var(--color-principal-oscuro);
+    font-size: 12px;
+    font-weight: 600;
+}

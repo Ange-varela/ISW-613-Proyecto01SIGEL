@@ -31,7 +31,11 @@ $sql = "SELECT id, codigo, nombre
 $consulta = $pdo->prepare($sql);
 $consulta->execute();
 $equipos = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener los equipos consultados recientemente
+$recientes = obtenerRecientes();
 ?>
+
 
 <?php
 $titulo = 'Crear prestamo';
@@ -90,6 +94,9 @@ require __DIR__ . '/../../includes/header.php';
                                 'UTF-8'
                             );
                             ?>
+                            <?php if (in_array((int)$equipo['id'], $recientes, true)): ?>
+                                <span class="etiqueta">Reciente</span>
+                            <?php endif; ?>
                         </label>
                     </p>
                 <?php endforeach; ?>
