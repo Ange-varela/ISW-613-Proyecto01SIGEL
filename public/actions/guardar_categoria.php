@@ -78,8 +78,11 @@ try {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
-
     error_log($e->getMessage());
+    // Avisar si el dato ya existe
+    if (esDatoRepetido($e)) {
+        guardarMensaje('Ya existe una categoria con el nombre ' . $nombre . '.');
+    }
 
     header('Location: ../pages/categorias.php?error=1');
     exit;

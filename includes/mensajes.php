@@ -10,14 +10,31 @@ const MENSAJES_EXITO = [
 // Mensajes de error, se muestran segun el valor de error en la URL
 const MENSAJES_ERROR = [
     '1' => 'No se pudo completar la operacion. Verifique los datos.',
-    'datos' => 'Revise los datos del prestamo y seleccione al menos un equipo.',
-    'fechas' => 'Las fechas ingresadas no son validas.',
-    'registro' => 'No se pudo registrar el prestamo. Verifique que los equipos esten disponibles para esas fechas.',
+    'datos' => 'Seleccione un profesor y al menos un equipo.',
+    'fechas' => 'Revise las fechas: la fecha de fin debe ser posterior a la fecha de inicio.',
+    'registro' => 'No se pudo registrar el prestamo. Intente de nuevo.',
     'entrega' => 'No se pudo registrar la entrega. Verifique el codigo de retiro.'
 ];
 
+// Guardar un mensaje de error especifico para mostrarlo en la siguiente pagina
+function guardarMensaje($texto) {
+    $_SESSION['mensaje_error'] = $texto;
+}
+
+// Saber si un error fue porque el dato ya existe (dato repetido)
+function esDatoRepetido($error) {
+    return $error instanceof PDOException &&
+           ($error->errorInfo[1] ?? 0) === 1062;
+}
+
 // Mostrar los mensajes que correspondan segun la URL
 function mostrarMensajes() {
+    // Si hay un mensaje especifico guardado, mostrarlo y borrarlo
+    if (!empty($_SESSION['mensaje_error'])) {
+        echo '<p class="mensaje error">' . htmlspecialchars($_SESSION['mensaje_error'], ENT_QUOTES, 'UTF-8') . '</p>';
+        unset($_SESSION['mensaje_error']);
+        return;
+    }
     foreach (MENSAJES_EXITO as $clave => $texto) {
         if (($_GET[$clave] ?? '') === '1') {
             echo '<p class="mensaje exito">' . htmlspecialchars($texto, ENT_QUOTES, 'UTF-8') . '</p>';

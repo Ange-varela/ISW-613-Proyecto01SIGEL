@@ -15,7 +15,6 @@ $profesorId = filter_var(
     FILTER_VALIDATE_INT,
     ['options' => ['min_range' => 1]]
 );
-
 $inicioTexto = $_POST['fecha_inicio'] ?? '';
 $finTexto = $_POST['fecha_fin'] ?? '';
 $equipos = $_POST['equipos'] ?? [];
@@ -29,7 +28,7 @@ if (
     count($equipos) < 1 ||
     count($equipos) > 100
 ) {
-    header('Location: ../pages/prestamos.php?error=datos');
+    header('Location: ../pages/crear_prestamo.php?error=datos');
     exit;
 }
 
@@ -51,7 +50,7 @@ if (
     $fin->format('Y-m-d\TH:i') !== $finTexto ||
     $fin <= $inicio
 ) {
-    header('Location: ../pages/prestamos.php?error=fechas');
+    header('Location: ../pages/crear_prestamo.php?error=fechas');
     exit;
 }
 
@@ -69,7 +68,7 @@ foreach ($equipos as $equipoId) {
     );
 
     if (!$id) {
-        header('Location: ../pages/prestamos.php?error=datos');
+        header('Location: ../pages/crear_prestamo.php?error=datos');
         exit;
     }
 
@@ -93,6 +92,7 @@ try {
     $consulta->execute([$profesorId]);
 
     if (!$consulta->fetchColumn()) {
+        guardarMensaje('El profesor seleccionado ya no esta activo.');
         throw new RuntimeException('Profesor no disponible');
     }
 
@@ -113,14 +113,17 @@ try {
     $equiposValidos = $consulta->fetchAll(PDO::FETCH_COLUMN);
 
     if (count($equiposValidos) !== count($ids)) {
+        guardarMensaje('Uno de los equipos ya no esta disponible (fue eliminado o esta en mantenimiento).');
         throw new RuntimeException('Hay equipos no disponibles');
     }
 
     // Comprobar prestamos que coincidan en fechas
-    $sql = "SELECT pd.equipo_id
+    $sql = "SELECT e.codigo, e.nombre, p.fecha_inicio, p.fecha_fin
             FROM prestamo_detalle pd
             INNER JOIN prestamos p
                 ON p.id = pd.prestamo_id
+            INNER JOIN equipos e
+                ON e.id = pd.equipo_id
             WHERE pd.equipo_id IN ($marcadores)
             AND p.estado IN (
                 'solicitado',
@@ -137,10 +140,15 @@ try {
         $ids,
         [$fechaFin, $fechaInicio]
     );
-
     $consulta->execute($parametros);
-
-    if ($consulta->fetchColumn() !== false) {
+    $choque = $consulta->fetch(PDO::FETCH_ASSOC);
+    if ($choque) {
+        guardarMensaje(
+            'El equipo ' . $choque['codigo'] . ' - ' . $choque['nombre'] .
+            ' ya esta reservado del ' . date('d/m/Y H:i', strtotime($choque['fecha_inicio'])) .
+            ' al ' . date('d/m/Y H:i', strtotime($choque['fecha_fin'])) .
+            '. Elija otras fechas u otro equipo.'
+        );
         throw new RuntimeException('Los equipos ya estan reservados');
     }
 
@@ -207,6 +215,6 @@ try {
 
     error_log($e->getMessage());
 
-    header('Location: ../pages/prestamos.php?error=registro');
+    header('Location: ../pages/crear_prestamo.php?error=registro');
     exit;
 }
