@@ -1,5 +1,5 @@
 <?php
-// Iniciar la sesion
+// Cargar la sesion y las funciones del sistema
 require_once __DIR__ . '/../includes/auth.php';
 
 // Si ya tiene sesion o una cookie de recordarme valida, ir al menu

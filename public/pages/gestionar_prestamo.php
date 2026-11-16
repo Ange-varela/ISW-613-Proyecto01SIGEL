@@ -55,7 +55,6 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-
 // Recuperar el codigo temporal
 $codigoMostrar = null;
 
@@ -85,7 +84,7 @@ switch ($prestamo['estado']) {
         break;
 
     case 'aprobado':
-        // La entrega validara el codigo de retiro al implementar la Regla 18
+        // La entrega se hace con el formulario del codigo de retiro (Regla 18)
         $acciones = [
             'cancelado' => 'Cancelar prestamo'
         ];

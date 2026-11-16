@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../includes/auth.php';
 // Verificar el permiso
 verificarPermiso('eliminar_equipo');
 
-/// Validar que sea POST y que el token CSRF sea correcto
+// Validar que sea POST y que el token CSRF sea correcto
 validarFormulario();
 
 // Validar el ID
