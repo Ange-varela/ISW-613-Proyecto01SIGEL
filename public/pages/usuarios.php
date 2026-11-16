@@ -224,8 +224,7 @@ require __DIR__ . '/../../includes/header.php';
                 ]), ENT_QUOTES, 'UTF-8'); ?>">Anterior</a>
             <?php endif; ?>
 
-            <span>Pagina <?php echo $pagina; ?> de <?php echo $totalPaginas; ?></span>
-
+            <span>Pagina <?php echo $pagina; ?> de <?php echo $totalPaginas; ?> (<?php echo $total; ?> usuarios)</span>
             <?php if ($pagina < $totalPaginas): ?>
                 <a class="boton boton-secundario" href="?<?php echo htmlspecialchars(http_build_query([
                     'buscar' => $buscar,
